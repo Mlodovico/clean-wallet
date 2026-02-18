@@ -1,7 +1,9 @@
 import { Birthdate } from './Birthdate';
 import { ClientId } from './ClientId';
 import { Email } from './Email';
+import { Password } from './Password';
 import { Phone } from './Phone';
+import { Status } from './Status';
 
 const { randomUUID: uuidv4 } = require('crypto');
 
@@ -13,8 +15,8 @@ export class Client {
     public readonly email: Email,
     public readonly birthDate: Birthdate,
     public readonly document: Document,
-    public readonly password: string,
-    public readonly status: string,
+    public readonly password: Password,
+    public readonly status: Status,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
@@ -35,8 +37,15 @@ export class Client {
   }
 
   static activate(client: Client): Client {
-    if (client.status === 'active') {
+    if (client.status.asString === 'active') {
       throw new Error('Client is already active');
+    }
+
+    const statusResult = Status.create('active');
+    if (!statusResult.ok) {
+      throw new Error(
+        `Failed to activate client: ${statusResult.error.message}`,
+      );
     }
 
     return new Client(
@@ -47,15 +56,22 @@ export class Client {
       client.birthDate,
       client.document,
       client.password,
-      'active',
+      statusResult.value,
       client.createdAt,
       client.updatedAt,
     );
   }
 
   static deactivate(client: Client): Client {
-    if (client.status === 'inactive') {
+    if (client.status.asString === 'inactive') {
       throw new Error('Client is already inactive');
+    }
+
+    const statusResult = Status.create('deactive');
+    if (!statusResult.ok) {
+      throw new Error(
+        `Failed to deactive client: ${statusResult.error.message}`,
+      );
     }
 
     return new Client(
@@ -66,7 +82,7 @@ export class Client {
       client.birthDate,
       client.document,
       client.password,
-      'inactive',
+      statusResult.value,
       client.createdAt,
       client.updatedAt,
     );

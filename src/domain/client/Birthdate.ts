@@ -61,7 +61,7 @@ export class Birthdate {
     return age;
   }
 
-  toString(): string {
+  get toString(): string {
     return this.value.toISOString().split('T')[0];
   }
 
