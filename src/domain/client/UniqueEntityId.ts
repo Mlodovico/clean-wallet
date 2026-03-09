@@ -1,17 +1,16 @@
-import { randomUUID } from "crypto";
+export class UniqueEntityId {
+  private readonly id: string;
 
-export abstract class UniqueEntityId {
-    protected readonly value: string;
+  constructor(id: string) {
+    this.id = id;
+  }
 
-    protected constructor(value?: string) {
-        this.value = value || randomUUID();
-    }
+  static generate(): string {
+    return Math.random().toString(36).substr(2, 9);
+  }
 
-    equals(id: UniqueEntityId): boolean {
-        return this.value === id.value;
-    }
-
-    toString(): string {
-        return this.value;
-    }
+  static isValid(id: string): boolean {
+    // Validation logic here
+    return true;
+  }
 }
