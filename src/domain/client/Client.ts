@@ -1,6 +1,7 @@
 import { Birthdate } from './Birthdate';
 import { ClientId } from './ClientId';
 import { Email } from './Email';
+import { Name } from './Name';
 import { Password } from './Password';
 import { Phone } from './Phone';
 import { Status } from './Status';
@@ -10,7 +11,7 @@ const { randomUUID: uuidv4 } = require('crypto');
 export class Client {
   constructor(
     public readonly id: ClientId,
-    public readonly name: string,
+    public readonly name: Name,
     public readonly phone: Phone,
     public readonly email: Email,
     public readonly birthDate: Birthdate,
