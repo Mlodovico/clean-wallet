@@ -1,10 +1,10 @@
-import { Birthdate } from './Birthdate';
-import { ClientId } from './ClientId';
-import { Email } from './Email';
-import { Name } from './Name';
-import { Password } from './Password';
-import { Phone } from './Phone';
-import { Status } from './Status';
+import { Birthdate } from './value-object/Birthdate';
+import { ClientId } from './value-object/ClientId';
+import { Email } from './value-object/Email';
+import { Name } from './value-object/Name';
+import { Password } from './value-object/Password';
+import { Phone } from './value-object/Phone';
+import { Status } from './value-object/Status';
 
 const { randomUUID: uuidv4 } = require('crypto');
 
