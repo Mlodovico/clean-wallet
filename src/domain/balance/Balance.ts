@@ -1,5 +1,6 @@
 import { Amount } from "./value-objects/Amount";
 import { Currency } from './value-objects/Currency';
+import { Description } from './value-objects/Description';
 import { OverdraftLimit } from "./value-objects/OverdraftLimit";
 import { TransactionType } from './value-objects/TrancactionType';
 
@@ -13,7 +14,7 @@ export class Balance {
     public readonly currency: Currency,
     public readonly transactionType: TransactionType,
     public readonly transactionId: string,
-    public readonly description: string,
+    public readonly description: Description,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
