@@ -1,5 +1,7 @@
 import { Amount } from "./value-objects/Amount";
+import { Currency } from './value-objects/Currency';
 import { OverdraftLimit } from "./value-objects/OverdraftLimit";
+import { TransactionType } from './value-objects/TrancactionType';
 
 const { randomUUID: uuidv4 } = require('crypto');
 
@@ -8,8 +10,8 @@ export class Balance {
     public readonly id: string,
     public readonly amount: Amount,
     public readonly overdraftLimit: OverdraftLimit,
-    public readonly currency: string,
-    public readonly transactionType: string,
+    public readonly currency: Currency,
+    public readonly transactionType: TransactionType,
     public readonly transactionId: string,
     public readonly description: string,
     public readonly createdAt: Date,
