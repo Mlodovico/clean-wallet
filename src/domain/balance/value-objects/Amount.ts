@@ -1,19 +1,20 @@
-import { amountErrors } from '../errors/amountErrors.errors';
+import { AmountErrors } from '../errors/amount.errors';
 
 export class Amount {
+  static amountErrors = AmountErrors;
   private constructor(private readonly value: number) {}
 
   static create(amount: number): Amount {
     if (amount <= 0) {
-      throw amountErrors.amountMustBeGreaterThanZero();
+      throw this.amountErrors.amountMustBeGreaterThanZero();
     }
 
     if (!Amount.isFinite(amount)) {
-      throw amountErrors.amountMustBeFinite();
+      throw this.amountErrors.amountMustBeFinite();
     }
 
     if (!Amount.hasAtMostTwoDecimals(amount)) {
-      throw amountErrors.amountMustHaveAtMostTwoDecimals();
+      throw this.amountErrors.amountMustHaveAtMostTwoDecimals();
     }
 
     return new Amount(amount);
