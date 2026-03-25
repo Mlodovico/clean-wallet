@@ -1,4 +1,4 @@
-import { UniqueEntityId } from '../UniqueEntityId';
+import { UniqueEntityId } from './UniqueEntityId';
 
 export class ClientId extends UniqueEntityId {
   private readonly value: string;
