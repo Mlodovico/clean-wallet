@@ -15,11 +15,6 @@ export class TransactionId {
       throw TransactionIdErrors.transactionIdMustNotBeEmptyString();
     }
 
-    // opcional: endurecer para UUID v4
-    // if (!TransactionId.isUuidV4(normalized)) {
-    //   throw TransactionIdErrors.transactionIdMustBeUuidV4();
-    // }
-
     return new TransactionId(normalized);
   }
 
