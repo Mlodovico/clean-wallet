@@ -22,6 +22,8 @@ export class Client {
     public readonly updatedAt: Date,
   ) {}
 
+  // Melhoria: montar erros customizados
+
   static create(props: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>): Client {
     return new Client(
       uuidv4(),

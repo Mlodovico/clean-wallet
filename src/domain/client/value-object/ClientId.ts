@@ -1,28 +1,27 @@
-import { UniqueEntityId } from './UniqueEntityId';
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 
-export class ClientId extends UniqueEntityId {
+export class ClientId {
   private readonly value: string;
 
-  constructor(value: string) {
-    super(value);
+  private constructor(value: string) {
     this.value = value;
   }
 
   static create(value?: string): ClientId {
-    const id = value || UniqueEntityId.generate();
+    const id = value || uuidv4();
 
-    if (!UniqueEntityId.isValid(id)) {
+    if (!uuidValidate(id)) {
       throw new Error('Invalid ClientId format');
     }
 
     return new ClientId(id);
   }
 
-  equals(other: ClientId): boolean {
-    return this.value === other.value;
+  getValue(): string {
+    return this.value;
   }
 
-  toString(): string {
-    return this.value;
+  equals(other: ClientId): boolean {
+    return this.value === other.value;
   }
 }
