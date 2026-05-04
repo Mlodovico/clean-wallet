@@ -11,7 +11,7 @@ import { ClientDocument } from './value-object/ClientDocument';
 
 const { randomUUID: uuidv4 } = require('crypto');
 
-type ClientProps = {
+type RawClientProps = {
   name: string;
   phone: string;
   email: string;
@@ -37,7 +37,7 @@ export class Client {
 
   // Melhoria: montar erros customizados
 
-  static create(props: ClientProps): Result<Client> {
+  static create(props: RawClientProps): Result<Client> {
     const nameResult = Name.create(props.name);
     if (nameResult.isFailure) {
       return Result.fail<Client>(`Invalid name: ${nameResult.getError()}`);
@@ -81,7 +81,7 @@ export class Client {
 
     return Result.ok(
       new Client(
-        uuidv4(),
+        ClientId.create(),
         nameResult.getValue(),
         phoneResult.getValue(),
         emailResult.getValue(),

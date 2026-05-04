@@ -9,17 +9,22 @@ export class ClientService {
     return this.clients;
   }
 
-  create(clientData: Partial<Client>): Client {
-    const newClient = Client.create({
-      Name: clientData.name,
-      Phone: clientData.phone,
-      Email: clientData.email,
-      BirthDate: clientData.birthDate,
-      Document: clientData.document,
-      Password: clientData.password,
-      Status: clientData.status,
+  create(clientData: Client): Client {
+    const clientResult = Client.create({
+      name: clientData.name.getValue(),
+      phone: clientData.phone.getValue(),
+      email: clientData.email.getValue(),
+      birthDate: clientData.birthDate.getValue(),
+      document: clientData.document.getValue(),
+      password: clientData.password.getValue(),
+      status: clientData.status.getValue(),
     });
 
+    if (clientResult.isFailure) {
+      throw new Error(`Failed to create client: ${clientResult.getError()}`);
+    }
+
+    const newClient = clientResult.getValue();
     this.clients.push(newClient);
     return newClient;
   }

@@ -35,4 +35,8 @@ export class Status {
   get asString(): string {
     return this.value;
   }
+
+  getValue(): string {
+    return this.value;
+  }
 }

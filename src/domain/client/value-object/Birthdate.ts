@@ -81,4 +81,8 @@ export class Birthdate {
 
     return birthdate < maxAgeDate;
   }
+
+  getValue(): Date {
+    return this.asDate;
+  }
 }
