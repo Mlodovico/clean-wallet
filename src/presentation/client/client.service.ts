@@ -19,6 +19,7 @@ export class ClientService {
       Password: clientData.password,
       Status: clientData.status,
     });
+
     this.clients.push(newClient);
     return newClient;
   }

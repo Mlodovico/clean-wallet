@@ -1,4 +1,4 @@
-type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
+import { Result } from '../../../shared/utils/Result';
 
 export class Birthdate {
   private static readonly MIN_AGE_YEARS = 18;
@@ -11,35 +11,26 @@ export class Birthdate {
       typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
 
     if (isNaN(date.getTime())) {
-      return { ok: false, error: new Error('Invalid date format') };
+      return Result.fail<Birthdate>('Invalid birthdate format');
     }
 
     if (this.isInFuture(date)) {
-      return {
-        ok: false,
-        error: new Error('Birthdate cannot be in the future'),
-      };
+      return Result.fail<Birthdate>('Birthdate cannot be in the future');
     }
 
     if (!this.hasMinimumAge(date)) {
-      return {
-        ok: false,
-        error: new Error(
-          `Client must be at least ${this.MIN_AGE_YEARS} years old`,
-        ),
-      };
+      return Result.fail<Birthdate>(
+        `Client must be at least ${this.MIN_AGE_YEARS} years old`,
+      );
     }
 
     if (this.exceedsMaximumAge(date)) {
-      return {
-        ok: false,
-        error: new Error(
-          `Client cannot be older than ${this.MAX_AGE_YEARS} years`,
-        ),
-      };
+      return Result.fail<Birthdate>(
+        `Client cannot be older than ${this.MAX_AGE_YEARS} years`,
+      );
     }
 
-    return { ok: true, value: new Birthdate(date) };
+    return Result.ok<Birthdate>(new Birthdate(date));
   }
 
   get asDate(): Date {

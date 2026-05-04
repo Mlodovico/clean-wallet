@@ -1,4 +1,4 @@
-type Result<T, E = Error> = { ok: true; value: T } | { ok: false; error: E };
+import { Result } from '../../../shared/utils/Result';
 
 export class Password {
   private static readonly MIN_LENGTH = 8;
@@ -17,50 +17,38 @@ export class Password {
 
   static create(password: string): Result<Password> {
     const validationResult = this.validate(password);
-    if (!validationResult.ok) {
-      return { ok: false, error: validationResult.error };
+    if (!validationResult.isSuccess) {
+      return Result.fail<Password>('Password validation failed');
     }
-    return { ok: true, value: new Password(password) };
+    return Result.ok<Password>(new Password(password));
   }
 
   private static validate(password: string): Result<void> {
     if (password.length < this.MIN_LENGTH) {
-      return {
-        ok: false,
-        error: new Error(
-          `Password must be at least ${this.MIN_LENGTH} characters long`,
-        ),
-      };
+      return Result.fail<void>(
+        `Password must be at least ${this.MIN_LENGTH} characters long`,
+      );
     }
 
     if (password.length > this.MAX_LENGTH) {
-      return {
-        ok: false,
-        error: new Error(
-          `Password cannot be longer than ${this.MAX_LENGTH} characters`,
-        ),
-      };
+      return Result.fail<void>(
+        `Password must be no more than ${this.MAX_LENGTH} characters long`,
+      );
     }
 
     if (/\s/.test(password)) {
-      return { ok: false, error: new Error('Password cannot contain spaces') };
+      return Result.fail<void>('Password cannot contain spaces');
     }
 
     if (!this.meetsComplexity(password)) {
-      return {
-        ok: false,
-        error: new Error('Password must meet complexity requirements'),
-      };
+      return Result.fail<void>('Password must meet complexity requirements');
     }
 
     if (this.COMMON_PASSWORDS.has(password)) {
-      return {
-        ok: false,
-        error: new Error('Password is too common and insecure'),
-      };
+      return Result.fail<void>('Password is too common and insecure');
     }
 
-    return { ok: true, value: undefined };
+    return Result.ok<void>();
   }
 
   private static meetsComplexity(password: string): boolean {

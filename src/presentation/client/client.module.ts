@@ -7,4 +7,5 @@ import { ClientService } from './client.service';
   providers: [ClientService],
   exports: [ClientService], // Exporta o serviço para outros módulos, se necessário
 })
+
 export class ClientModule {}
