@@ -9,8 +9,6 @@ import { Phone } from './value-object/Phone';
 import { Status } from './value-object/Status';
 import { ClientDocument } from './value-object/ClientDocument';
 
-const { randomUUID: uuidv4 } = require('crypto');
-
 type RawClientProps = {
   name: string;
   phone: string;
