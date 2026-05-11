@@ -1,13 +1,13 @@
 import { Result } from 'src/shared/utils/Result';
 
-import { Birthdate } from './value-object/Birthdate';
-import { ClientId } from './value-object/ClientId';
-import { Email } from './value-object/Email';
-import { Name } from './value-object/Name';
-import { Password } from './value-object/Password';
-import { Phone } from './value-object/Phone';
-import { Status } from './value-object/Status';
-import { ClientDocument } from './value-object/ClientDocument';
+import { Birthdate } from './vo/Birthdate';
+import { ClientId } from './vo/ClientId';
+import { Email } from './vo/Email';
+import { Name } from './vo/Name';
+import { Password } from './vo/Password';
+import { Phone } from './vo/Phone';
+import { Status } from './vo/Status';
+import { ClientDocument } from './vo/ClientDocument';
 
 type RawClientProps = {
   name: string;

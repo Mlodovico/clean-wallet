@@ -1,12 +1,12 @@
 import { ClientService } from 'src/presentation/client/client.service';
 import { Client } from 'src/domain/client/Client';
-import { Name } from 'src/domain/client/value-object/Name';
-import { Phone } from 'src/domain/client/value-object/Phone';
-import { Email } from 'src/domain/client/value-object/Email';
-import { Birthdate } from 'src/domain/client/value-object/Birthdate';
-import { ClientDocument } from 'src/domain/client/value-object/ClientDocument';
-import { Password } from 'src/domain/client/value-object/Password';
-import { Status } from 'src/domain/client/value-object/Status';
+import { Name } from 'src/domain/client/vo/Name';
+import { Phone } from 'src/domain/client/vo/Phone';
+import { Email } from 'src/domain/client/vo/Email';
+import { Birthdate } from 'src/domain/client/vo/Birthdate';
+import { ClientDocument } from 'src/domain/client/vo/ClientDocument';
+import { Password } from 'src/domain/client/vo/Password';
+import { Status } from 'src/domain/client/vo/Status';
 import { beforeEach, describe, it } from 'node:test';
 
 describe('Client Integration', () => {

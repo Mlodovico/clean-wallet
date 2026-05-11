@@ -1,10 +1,10 @@
-import { Amount } from "./value-objects/Amount";
-import { BalanceId } from './value-objects/BalanceId';
-import { Currency } from './value-objects/Currency';
-import { Description } from './value-objects/Description';
-import { OverdraftLimit } from "./value-objects/OverdraftLimit";
-import { TransactionType } from './value-objects/TrancactionType';
-import { TransactionId } from './value-objects/TransactionId';
+import { Amount } from './vo/Amount';
+import { BalanceId } from './vo/BalanceId';
+import { Currency } from './vo/Currency';
+import { Description } from './vo/Description';
+import { OverdraftLimit } from './vo/OverdraftLimit';
+import { TransactionType } from './vo/TrancactionType';
+import { TransactionId } from './vo/TransactionId';
 
 const { randomUUID: uuidv4 } = require('crypto');
 

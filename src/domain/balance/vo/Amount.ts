@@ -1,23 +1,31 @@
+import { Result } from 'src/shared/utils/Result';
+
 import { AmountErrors } from '../errors/amount.errors';
 
 export class Amount {
   static amountErrors = AmountErrors;
   private constructor(private readonly value: number) {}
 
-  static create(amount: number): Amount {
+  static create(amount: number): Result<Amount> {
     if (amount <= 0) {
-      throw this.amountErrors.amountMustBeGreaterThanZero();
+      return Result.fail<Amount>(
+        this.amountErrors.amountMustBeFinite().message,
+      );
     }
 
     if (!Amount.isFinite(amount)) {
-      throw this.amountErrors.amountMustBeFinite();
+      return Result.fail<Amount>(
+        this.amountErrors.amountMustBeFinite().message,
+      );
     }
 
     if (!Amount.hasAtMostTwoDecimals(amount)) {
-      throw this.amountErrors.amountMustHaveAtMostTwoDecimals();
+      return Result.fail<Amount>(
+        this.amountErrors.amountMustHaveAtMostTwoDecimals().message,
+      );
     }
 
-    return new Amount(amount);
+    return Result.ok<Amount>(new Amount(amount));
   }
 
   static isPositive(value: number): boolean {

@@ -1,21 +1,27 @@
 import { randomUUID } from 'crypto';
 import { TransactionIdErrors } from '../errors/transactionId.errors';
 
+import { Result } from '../../../shared/utils/Result';
+
 export class TransactionId {
   private constructor(private readonly value: string) {}
 
-  static create(value: string): TransactionId {
+  static create(value: string): Result<TransactionId> {
     if (typeof value !== 'string') {
-      throw TransactionIdErrors.transactionIdMustBeString();
+      return Result.fail<TransactionId>(
+        TransactionIdErrors.transactionIdMustBeString().message,
+      );
     }
 
     const normalized = value.trim();
 
     if (normalized.length === 0) {
-      throw TransactionIdErrors.transactionIdMustNotBeEmptyString();
+      return Result.fail<TransactionId>(
+        TransactionIdErrors.transactionIdMustNotBeEmptyString().message,
+      );
     }
 
-    return new TransactionId(normalized);
+    return Result.ok<TransactionId>(new TransactionId(normalized));
   }
 
   static generate(): TransactionId {
