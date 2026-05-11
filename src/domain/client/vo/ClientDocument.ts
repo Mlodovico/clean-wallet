@@ -1,4 +1,5 @@
 import { Result } from 'src/shared/utils/Result';
+import { DocumentErrors } from '../errors/document.errors';
 
 export class ClientDocument {
   private constructor(private readonly value: string) {}
@@ -7,7 +8,9 @@ export class ClientDocument {
     const cleaned = document.replace(/\D/g, '');
 
     if (!this.isValidCPF) {
-      return Result.fail<ClientDocument>('Invalid CPF');
+      return Result.fail<ClientDocument>(
+        DocumentErrors.invalidDocumentFormat().message,
+      );
     }
 
     return Result.ok(new ClientDocument(cleaned));

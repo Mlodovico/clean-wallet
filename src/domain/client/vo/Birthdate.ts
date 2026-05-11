@@ -1,4 +1,5 @@
 import { Result } from '../../../shared/utils/Result';
+import { BirthdateErrors } from '../errors/birthdate.errors';
 
 export class Birthdate {
   private static readonly MIN_AGE_YEARS = 18;
@@ -11,22 +12,30 @@ export class Birthdate {
       typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
 
     if (isNaN(date.getTime())) {
-      return Result.fail<Birthdate>('Invalid birthdate format');
+      return Result.fail<Birthdate>(
+        BirthdateErrors.invalidBirthdateFormate().message,
+      );
     }
 
     if (this.isInFuture(date)) {
-      return Result.fail<Birthdate>('Birthdate cannot be in the future');
+      return Result.fail<Birthdate>(
+        BirthdateErrors.birthdateMustBeInThePast().message,
+      );
     }
 
     if (!this.hasMinimumAge(date)) {
       return Result.fail<Birthdate>(
-        `Client must be at least ${this.MIN_AGE_YEARS} years old`,
+        BirthdateErrors.birthdateMustBeAtLeast18YearsOld(
+          this.MIN_AGE_YEARS.toString(),
+        ).message,
       );
     }
 
     if (this.exceedsMaximumAge(date)) {
       return Result.fail<Birthdate>(
-        `Client cannot be older than ${this.MAX_AGE_YEARS} years`,
+        BirthdateErrors.birthdateMustNotExceedMaximumAge(
+          this.MAX_AGE_YEARS.toString(),
+        ).message,
       );
     }
 

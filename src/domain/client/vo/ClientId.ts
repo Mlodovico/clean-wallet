@@ -1,4 +1,6 @@
+import { Result } from 'src/shared/utils/Result';
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
+import { ClientIdErrors } from '../errors/clientid.errors';
 
 export class ClientId {
   private readonly value: string;
@@ -7,14 +9,16 @@ export class ClientId {
     this.value = value;
   }
 
-  static create(value?: string): ClientId {
+  static create(value?: string): Result<ClientId> {
     const id = value || uuidv4();
 
     if (!uuidValidate(id)) {
-      throw new Error('Invalid ClientId format');
+      return Result.fail<ClientId>(
+        ClientIdErrors.clientIdMustBeValidUUID().message,
+      );
     }
 
-    return new ClientId(id);
+    return Result.ok<ClientId>(new ClientId(id));
   }
 
   getValue(): string {

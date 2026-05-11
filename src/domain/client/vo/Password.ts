@@ -1,4 +1,5 @@
 import { Result } from '../../../shared/utils/Result';
+import { PasswordErrors } from '../errors/password.errors';
 
 export class Password {
   private static readonly MIN_LENGTH = 8;
@@ -18,34 +19,45 @@ export class Password {
   static create(password: string): Result<Password> {
     const validationResult = this.validate(password);
     if (!validationResult.isSuccess) {
-      return Result.fail<Password>('Password validation failed');
+      return Result.fail<Password>(
+        PasswordErrors.passwordValidationFailed().message,
+      );
     }
+
     return Result.ok<Password>(new Password(password));
   }
 
   private static validate(password: string): Result<void> {
     if (password.length < this.MIN_LENGTH) {
       return Result.fail<void>(
-        `Password must be at least ${this.MIN_LENGTH} characters long`,
+        PasswordErrors.passwordMinLengthExceeded(this.MIN_LENGTH.toString())
+          .message,
       );
     }
 
     if (password.length > this.MAX_LENGTH) {
       return Result.fail<void>(
-        `Password must be no more than ${this.MAX_LENGTH} characters long`,
+        PasswordErrors.passwordMaxLengthExceeded(this.MAX_LENGTH.toString())
+          .message,
       );
     }
 
     if (/\s/.test(password)) {
-      return Result.fail<void>('Password cannot contain spaces');
+      return Result.fail<void>(
+        PasswordErrors.passwordCannotContainSpaces().message,
+      );
     }
 
     if (!this.meetsComplexity(password)) {
-      return Result.fail<void>('Password must meet complexity requirements');
+      return Result.fail<void>(
+        PasswordErrors.passwordMustMeetComplexityRequirements().message,
+      );
     }
 
     if (this.COMMON_PASSWORDS.has(password)) {
-      return Result.fail<void>('Password is too common and insecure');
+      return Result.fail<void>(
+        PasswordErrors.passwordValidationFailed().message,
+      );
     }
 
     return Result.ok<void>();
