@@ -79,7 +79,7 @@ export class Client {
 
     return Result.ok(
       new Client(
-        ClientId.create(),
+        ClientId.create().getValue(),
         nameResult.getValue(),
         phoneResult.getValue(),
         emailResult.getValue(),
