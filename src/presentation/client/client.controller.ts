@@ -7,7 +7,6 @@ import { Client } from '../../domain/client/Client';
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
-  // Retorna todos os clientes
   @Get()
   findAll(): Client[] {
     return this.clientService.findAll();
