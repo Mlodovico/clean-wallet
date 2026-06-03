@@ -5,7 +5,7 @@ export class BalanceId {
   private constructor(readonly value) {}
 
   static create(value: string) {
-    if (typeof value !== 'string') {
+    if (typeof value !== "string") {
       throw BalanceIdErrors.balanceIdMustBeString();
     }
 
@@ -18,7 +18,7 @@ export class BalanceId {
     return new BalanceId(normalized);
   }
   static isValidBalanceId(value: string): boolean {
-    return typeof value === 'string' && value.trim().length > 0;
+    return typeof value === "string" && value.trim().length > 0;
   }
 
   static isUuidV4(value: string): boolean {

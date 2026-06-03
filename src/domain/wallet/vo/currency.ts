@@ -1,5 +1,5 @@
-import { Result } from 'src/shared/utils/Result';
-import { CurrencyErrors } from '../errors/currency.errors';
+import { Result } from "src/shared/utils/Result";
+import { CurrencyErrors } from "../errors/currency.errors";
 
 export class Currency {
   private constructor(private readonly value: number) {}

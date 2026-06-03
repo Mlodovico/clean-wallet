@@ -1,13 +1,13 @@
-import { Result } from '../../../shared/utils/Result';
+import { Result } from "../../../shared/utils/Result";
 
 export class Phone {
   private constructor(private readonly value: string) {}
 
   static create(phone: string): Result<Phone> {
-    const cleaned = phone.replace(/\D/g, '');
+    const cleaned = phone.replace(/\D/g, "");
 
     if (cleaned.length < 10 || cleaned.length > 11) {
-      return Result.fail<Phone>('Invalid phone number');
+      return Result.fail<Phone>("Invalid phone number");
     }
 
     return Result.ok<Phone>(new Phone(cleaned));

@@ -1,6 +1,6 @@
-import { Result } from 'src/shared/utils/Result';
+import { Result } from "src/shared/utils/Result";
 
-import { AmountErrors } from '../errors/amount.errors';
+import { AmountErrors } from "../errors/amount.errors";
 
 export class Amount {
   static amountErrors = AmountErrors;

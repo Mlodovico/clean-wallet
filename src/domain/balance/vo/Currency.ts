@@ -1,6 +1,6 @@
-import { Result } from 'src/shared/utils/Result';
+import { Result } from "src/shared/utils/Result";
 
-import { CurrencyErrors } from '../errors/currency.errors';
+import { CurrencyErrors } from "../errors/currency.errors";
 
 export class Currency {
   static currencyErrors = CurrencyErrors;

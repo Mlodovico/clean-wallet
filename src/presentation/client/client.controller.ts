@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post, Put } from "@nestjs/common";
 
-import { ClientService } from './client.service';
-import { Client } from '../../domain/client/Client';
+import { ClientService } from "./client.service";
+import { Client } from "../../domain/client/Client";
 
-@Controller('clients')
+@Controller("clients")
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
@@ -17,12 +17,12 @@ export class ClientController {
     return this.clientService.create(newClient);
   }
 
-  @Put(':id')
+  @Put(":id")
   updateClient(id: string, updateData: Partial<Client>): Client | undefined {
     return this.clientService.update(id, updateData);
   }
 
-  @Get(':id')
+  @Get(":id")
   findById(id: string): Client | undefined {
     return this.clientService.findOne(id);
   }

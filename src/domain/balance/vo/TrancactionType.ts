@@ -1,6 +1,6 @@
-import { TransactionTypeErrors } from '../errors/transactionType.errors';
+import { TransactionTypeErrors } from "../errors/transactionType.errors";
 
-import { Result } from 'src/shared/utils/Result';
+import { Result } from "src/shared/utils/Result";
 
 export class TransactionType {
   private constructor(private readonly value: string) {}
@@ -24,7 +24,7 @@ export class TransactionType {
   }
 
   static isValidTransactionType(value: string): boolean {
-    return typeof value === 'string' && value.length > 0;
+    return typeof value === "string" && value.length > 0;
   }
 
   static isEmpty(value: string): boolean {

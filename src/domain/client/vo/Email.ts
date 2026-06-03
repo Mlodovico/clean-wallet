@@ -1,11 +1,11 @@
-import { Result } from 'src/shared/utils/Result';
+import { Result } from "src/shared/utils/Result";
 
 export class Email {
   private constructor(private readonly value: string) {}
 
   static create(email: string): Result<Email> {
     if (!this.isValid(email)) {
-      return Result.fail<Email>('Invalid email format');
+      return Result.fail<Email>("Invalid email format");
     }
 
     return Result.ok(new Email(email.toLocaleLowerCase().trim()));

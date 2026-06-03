@@ -1,5 +1,5 @@
-import { Result } from 'src/shared/utils/Result';
-import { OverdraftLimitErrors } from '../errors/overdraftLimit.errors';
+import { Result } from "src/shared/utils/Result";
+import { OverdraftLimitErrors } from "../errors/overdraftLimit.errors";
 
 export class OverdraftLimit {
   private constructor(private readonly cents: number) {}

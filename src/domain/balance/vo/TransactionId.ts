@@ -1,13 +1,13 @@
-import { randomUUID } from 'crypto';
-import { TransactionIdErrors } from '../errors/transactionId.errors';
+import { randomUUID } from "crypto";
+import { TransactionIdErrors } from "../errors/transactionId.errors";
 
-import { Result } from '../../../shared/utils/Result';
+import { Result } from "../../../shared/utils/Result";
 
 export class TransactionId {
   private constructor(private readonly value: string) {}
 
   static create(value: string): Result<TransactionId> {
-    if (typeof value !== 'string') {
+    if (typeof value !== "string") {
       return Result.fail<TransactionId>(
         TransactionIdErrors.transactionIdMustBeString().message,
       );
@@ -29,7 +29,7 @@ export class TransactionId {
   }
 
   static isValidTransactionId(value: string): boolean {
-    return typeof value === 'string' && value.trim().length > 0;
+    return typeof value === "string" && value.trim().length > 0;
   }
 
   static isUuidV4(value: string): boolean {

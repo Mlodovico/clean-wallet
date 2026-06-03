@@ -1,6 +1,6 @@
-import { Result } from 'src/shared/utils/Result';
-import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
-import { ClientIdErrors } from '../errors/clientid.errors';
+import { Result } from "src/shared/utils/Result";
+import { v4 as uuidv4, validate as uuidValidate } from "uuid";
+import { ClientIdErrors } from "../errors/clientid.errors";
 
 export class ClientId {
   private readonly value: string;

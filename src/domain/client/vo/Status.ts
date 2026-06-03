@@ -1,11 +1,11 @@
-import { Result } from '../../../shared/utils/Result';
+import { Result } from "../../../shared/utils/Result";
 
 export class Status {
   private static readonly ALLOWED_STATUSES = new Set([
-    'active',
-    'inactive',
-    'suspended',
-    'pending',
+    "active",
+    "inactive",
+    "suspended",
+    "pending",
   ]);
 
   private constructor(private readonly value: string) {}
@@ -14,18 +14,18 @@ export class Status {
     const normalizedStatus = status.trim().toLowerCase();
 
     if (!normalizedStatus) {
-      return Result.fail<Status>('Status cannot be empty');
+      return Result.fail<Status>("Status cannot be empty");
     }
 
     if (normalizedStatus.length > 20) {
-      return Result.fail<Status>('Status cannot be longer than 20 characters');
+      return Result.fail<Status>("Status cannot be longer than 20 characters");
     }
 
     if (!this.ALLOWED_STATUSES.has(normalizedStatus)) {
       return Result.fail<Status>(
         `Invalid status: ${status}. Allowed values are: ${Array.from(
           this.ALLOWED_STATUSES,
-        ).join(', ')}`,
+        ).join(", ")}`,
       );
     }
 

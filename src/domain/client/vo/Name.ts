@@ -1,5 +1,5 @@
-import { Result } from '../../../shared/utils/Result';
-import { NameErrors } from '../errors/name.errors';
+import { Result } from "../../../shared/utils/Result";
+import { NameErrors } from "../errors/name.errors";
 
 export class Name {
   private constructor(readonly value: string) {}

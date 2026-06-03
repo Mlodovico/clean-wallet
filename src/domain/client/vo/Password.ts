@@ -1,17 +1,17 @@
-import { Result } from '../../../shared/utils/Result';
-import { PasswordErrors } from '../errors/password.errors';
+import { Result } from "../../../shared/utils/Result";
+import { PasswordErrors } from "../errors/password.errors";
 
 export class Password {
   private static readonly MIN_LENGTH = 8;
   private static readonly MAX_LENGTH = 64;
   private static readonly COMMON_PASSWORDS = new Set([
-    '123456',
-    'password',
-    'qwerty',
-    '12345678',
-    'abc123',
-    '111111',
-    '123123',
+    "123456",
+    "password",
+    "qwerty",
+    "12345678",
+    "abc123",
+    "111111",
+    "123123",
   ]);
 
   private constructor(private readonly value: string) {}

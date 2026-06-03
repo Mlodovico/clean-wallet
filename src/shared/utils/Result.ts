@@ -12,20 +12,20 @@ export class Result<T> {
 
     if (isSuccess && error) {
       throw new Error(
-        'Invalid operation: A result cannot be successful and contain an error',
+        "Invalid operation: A result cannot be successful and contain an error",
       );
     }
 
     if (!isSuccess && !error) {
       throw new Error(
-        'Invalid operation: A failing result needs to contain an error message',
+        "Invalid operation: A failing result needs to contain an error message",
       );
     }
   }
 
   public getValue(): T {
     if (!this.isSuccess) {
-      throw new Error('Cannot get the value of a failed result');
+      throw new Error("Cannot get the value of a failed result");
     }
 
     return this._value!;
@@ -33,7 +33,7 @@ export class Result<T> {
 
   public getError(): string {
     if (this.isSuccess) {
-      throw new Error('Cannot get the error of a successful result');
+      throw new Error("Cannot get the error of a successful result");
     }
 
     return this._error!;

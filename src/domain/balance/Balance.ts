@@ -1,12 +1,12 @@
-import { Amount } from './vo/Amount';
-import { BalanceId } from './vo/BalanceId';
-import { Currency } from './vo/Currency';
-import { Description } from './vo/Description';
-import { OverdraftLimit } from './vo/OverdraftLimit';
-import { TransactionType } from './vo/TrancactionType';
-import { TransactionId } from './vo/TransactionId';
+import { Amount } from "./vo/Amount";
+import { BalanceId } from "./vo/BalanceId";
+import { Currency } from "./vo/Currency";
+import { Description } from "./vo/Description";
+import { OverdraftLimit } from "./vo/OverdraftLimit";
+import { TransactionType } from "./vo/TrancactionType";
+import { TransactionId } from "./vo/TransactionId";
 
-const { randomUUID: uuidv4 } = require('crypto');
+const { randomUUID: uuidv4 } = require("crypto");
 
 export class Balance {
   constructor(
@@ -22,7 +22,7 @@ export class Balance {
   ) {}
 
   static create(
-    props: Omit<Balance, 'id' | 'createdAt' | 'updatedAt'>,
+    props: Omit<Balance, "id" | "createdAt" | "updatedAt">,
   ): Balance {
     return new Balance(
       uuidv4(),

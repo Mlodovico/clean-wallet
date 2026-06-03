@@ -1,5 +1,5 @@
-import { Result } from 'src/shared/utils/Result';
-import { WalletLimitErrors } from '../errors/walletLimit.errors';
+import { Result } from "src/shared/utils/Result";
+import { WalletLimitErrors } from "../errors/walletLimit.errors";
 
 export class WalletLimit {
   private constructor(private readonly value: number) {}

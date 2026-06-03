@@ -1,13 +1,13 @@
-import { Result } from 'src/shared/utils/Result';
+import { Result } from "src/shared/utils/Result";
 
-import { Birthdate } from './vo/Birthdate';
-import { ClientId } from './vo/ClientId';
-import { Email } from './vo/Email';
-import { Name } from './vo/Name';
-import { Password } from './vo/Password';
-import { Phone } from './vo/Phone';
-import { Status } from './vo/Status';
-import { ClientDocument } from './vo/ClientDocument';
+import { Birthdate } from "./vo/Birthdate";
+import { ClientId } from "./vo/ClientId";
+import { Email } from "./vo/Email";
+import { Name } from "./vo/Name";
+import { Password } from "./vo/Password";
+import { Phone } from "./vo/Phone";
+import { Status } from "./vo/Status";
+import { ClientDocument } from "./vo/ClientDocument";
 
 type RawClientProps = {
   name: string;
@@ -94,11 +94,11 @@ export class Client {
   }
 
   static activate(client: Client): Client {
-    if (client.status.asString === 'active') {
-      throw new Error('Client is already active');
+    if (client.status.asString === "active") {
+      throw new Error("Client is already active");
     }
 
-    const statusResult = Status.create('active');
+    const statusResult = Status.create("active");
     if (statusResult.isFailure) {
       throw new Error(`Failed to activate client: ${statusResult.getError()}`);
     }
@@ -118,11 +118,11 @@ export class Client {
   }
 
   static deactivate(client: Client): Client {
-    if (client.status.asString === 'inactive') {
-      throw new Error('Client is already inactive');
+    if (client.status.asString === "inactive") {
+      throw new Error("Client is already inactive");
     }
 
-    const statusResult = Status.create('deactive');
+    const statusResult = Status.create("deactive");
     if (statusResult.isFailure) {
       throw new Error(`Failed to deactive client: ${statusResult.isFailure}`);
     }

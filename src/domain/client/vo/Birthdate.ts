@@ -1,5 +1,5 @@
-import { Result } from '../../../shared/utils/Result';
-import { BirthdateErrors } from '../errors/birthdate.errors';
+import { Result } from "../../../shared/utils/Result";
+import { BirthdateErrors } from "../errors/birthdate.errors";
 
 export class Birthdate {
   private static readonly MIN_AGE_YEARS = 18;
@@ -9,7 +9,7 @@ export class Birthdate {
 
   static create(birthdate: Date | string): Result<Birthdate> {
     const date =
-      typeof birthdate === 'string' ? new Date(birthdate) : birthdate;
+      typeof birthdate === "string" ? new Date(birthdate) : birthdate;
 
     if (isNaN(date.getTime())) {
       return Result.fail<Birthdate>(
@@ -62,7 +62,7 @@ export class Birthdate {
   }
 
   get toString(): string {
-    return this.value.toISOString().split('T')[0];
+    return this.value.toISOString().split("T")[0];
   }
 
   private static isInFuture(birthdate: Date): boolean {

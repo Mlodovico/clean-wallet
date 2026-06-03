@@ -1,5 +1,5 @@
-import { Result } from 'src/shared/utils/Result';
-import { WalletIdErrors } from '../errors/walletid.errors';
+import { Result } from "src/shared/utils/Result";
+import { WalletIdErrors } from "../errors/walletid.errors";
 
 export class WalletId {
   private constructor(private readonly value: string) {}

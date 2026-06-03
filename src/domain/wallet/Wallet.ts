@@ -1,9 +1,9 @@
-import { Result } from 'src/shared/utils/Result';
-import { WalletId } from './vo/WalletId';
-import { WalletType } from './vo/walletTypes';
-import { Currency } from './vo/currency';
-import { WalletLimit } from './vo/walletLimit';
-import { ClientId } from '../client/vo/ClientId';
+import { Result } from "src/shared/utils/Result";
+import { WalletId } from "./vo/WalletId";
+import { WalletType } from "./vo/walletTypes";
+import { Currency } from "./vo/currency";
+import { WalletLimit } from "./vo/walletLimit";
+import { ClientId } from "../client/vo/ClientId";
 
 type RawWalletProps = {
   id: string;

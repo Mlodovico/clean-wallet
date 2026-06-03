@@ -1,11 +1,11 @@
-import { Result } from 'src/shared/utils/Result';
-import { DocumentErrors } from '../errors/document.errors';
+import { Result } from "src/shared/utils/Result";
+import { DocumentErrors } from "../errors/document.errors";
 
 export class ClientDocument {
   private constructor(private readonly value: string) {}
 
   static create(document: string): Result<ClientDocument> {
-    const cleaned = document.replace(/\D/g, '');
+    const cleaned = document.replace(/\D/g, "");
 
     if (!this.isValidCPF) {
       return Result.fail<ClientDocument>(
@@ -27,7 +27,7 @@ export class ClientDocument {
   }
 
   private static allDigitsEquals(cpf: string): boolean {
-    return cpf.split('').every((d) => d === cpf[0]);
+    return cpf.split("").every((d) => d === cpf[0]);
   }
 
   private static verificationDigitCalc(cpf: string, digit: number): boolean {
