@@ -1,16 +1,22 @@
 import { Result } from 'src/shared/utils/Result';
+import { WalletIdErrors } from '../errors/walletid.errors';
 
 export class WalletId {
   private constructor(private readonly value: string) {}
 
+  static walletIdErrors = WalletIdErrors;
+
   static create(id: string): Result<WalletId> {
     if (!id || id.trim().length === 0) {
-      return Result.fail<WalletId>('Wallet ID cannot be empty');
+      return Result.fail<WalletId>(
+        this.walletIdErrors.walletIdMustNotBeEmptyString().message,
+      );
     }
 
     if (id.length !== 36) {
-      // Exemplo: validação de UUID
-      return Result.fail<WalletId>('Wallet ID must be a valid UUID');
+      return Result.fail<WalletId>(
+        this.walletIdErrors.walletIdMustBeValidUUID().message,
+      );
     }
 
     return Result.ok(new WalletId(id));

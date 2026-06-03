@@ -3,6 +3,7 @@ import { WalletId } from './vo/WalletId';
 import { WalletType } from './vo/walletTypes';
 import { Currency } from './vo/currency';
 import { WalletLimit } from './vo/walletLimit';
+import { ClientId } from '../client/vo/ClientId';
 
 type RawWalletProps = {
   id: string;
@@ -15,7 +16,7 @@ type RawWalletProps = {
 export class Wallet {
   constructor(
     public readonly id: WalletId,
-    public readonly clientId: string,
+    public readonly clientId: ClientId,
     public readonly walletType: WalletType,
     public readonly currency: Currency,
     public readonly walletLimit: WalletLimit,
@@ -24,7 +25,6 @@ export class Wallet {
   ) {}
 
   static create(props: RawWalletProps): Result<Wallet> {
-    // Validação do WalletId
     const walletIdResult = WalletId.create(props.id);
     if (walletIdResult.isFailure) {
       return Result.fail<Wallet>(
@@ -32,7 +32,6 @@ export class Wallet {
       );
     }
 
-    // Validação do WalletType
     const walletTypeResult = WalletType.create(props.walletType);
     if (walletTypeResult.isFailure) {
       return Result.fail<Wallet>(
@@ -40,7 +39,6 @@ export class Wallet {
       );
     }
 
-    // Validação do Currency
     const currencyResult = Currency.create(props.currency);
     if (currencyResult.isFailure) {
       return Result.fail<Wallet>(
@@ -48,7 +46,6 @@ export class Wallet {
       );
     }
 
-    // Validação do WalletLimit
     const walletLimitResult = WalletLimit.create(props.walletLimit);
     if (walletLimitResult.isFailure) {
       return Result.fail<Wallet>(
@@ -56,11 +53,17 @@ export class Wallet {
       );
     }
 
-    // Se todas as validações passarem, criar a Wallet
+    const clientIdResult = ClientId.create(props.clientId);
+    if (clientIdResult.isFailure) {
+      return Result.fail<Wallet>(
+        `Invalid client ID: ${clientIdResult.getError()}`,
+      );
+    }
+
     return Result.ok(
       new Wallet(
         walletIdResult.getValue(),
-        props.clientId,
+        clientIdResult.getValue(),
         walletTypeResult.getValue(),
         currencyResult.getValue(),
         walletLimitResult.getValue(),
