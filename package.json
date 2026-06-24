@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
-    "start:dev": "ts-node --esm ./instrumentation.ts && node ./node_modules/@nestjs/cli/bin/nest.js start --watch",
+    "start:dev": "nest start --watch -e 'node -r ts-node/register -r ./instrumentation.ts'",
     "start": "node --import ./instrumentation.ts ./dist/main.js",
     "start:prod": "node --import ./instrumentation.js dist/main.js",
     "dev": "bash scripts/start-dev.sh",
