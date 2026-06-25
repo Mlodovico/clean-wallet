@@ -14,28 +14,34 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientRepository = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("typeorm");
-const typeorm_2 = require("@nestjs/typeorm");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 const client_entity_1 = require("../../domain/client/client.entity");
 let ClientRepository = class ClientRepository {
-    clientRepository;
-    constructor(clientRepository) {
-        this.clientRepository = clientRepository;
+    repository;
+    constructor(repository) {
+        this.repository = repository;
     }
-    async create(client) {
-        return this.clientRepository.save(client);
-    }
-    async findAll() {
-        return this.clientRepository.find();
-    }
-    async findOne(id) {
-        return this.clientRepository.findOneBy({ id });
+    async save(record) {
+        const saved = await this.repository.save(record);
+        return {
+            id: saved.id,
+            name: saved.name,
+            email: saved.email,
+            phone: saved.phone,
+            birthDate: saved.birthDate,
+            document: saved.document,
+            password: saved.password,
+            status: saved.status,
+            createdAt: saved.createdAt,
+            updatedAt: saved.updatedAt,
+        };
     }
 };
 exports.ClientRepository = ClientRepository;
 exports.ClientRepository = ClientRepository = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_2.InjectRepository)(client_entity_1.Client)),
-    __metadata("design:paramtypes", [typeorm_1.Repository])
+    __param(0, (0, typeorm_1.InjectRepository)(client_entity_1.Client)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], ClientRepository);
 //# sourceMappingURL=ClientRepository.js.map

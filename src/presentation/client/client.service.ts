@@ -1,30 +1,23 @@
 import { Injectable } from "@nestjs/common";
+
+import {
+  CreateClientInput,
+  CreateClientUseCase,
+} from "../../application/client/create-client.use-case";
 import { Client } from "../../domain/client/Client";
 
 @Injectable()
 export class ClientService {
   private clients: Client[] = [];
 
+  constructor(private readonly createClientUseCase: CreateClientUseCase) {}
+
   findAll(): Client[] {
     return this.clients;
   }
 
-  create(clientData: Client): Client {
-    const clientResult = Client.create({
-      name: clientData.name.getValue(),
-      phone: clientData.phone.getValue(),
-      email: clientData.email.getValue(),
-      birthDate: clientData.birthDate.getValue(),
-      document: clientData.document.getValue(),
-      password: clientData.password.getValue(),
-      status: clientData.status.getValue(),
-    });
-
-    if (clientResult.isFailure) {
-      throw new Error(`Failed to create client: ${clientResult.getError()}`);
-    }
-
-    const newClient = clientResult.getValue();
+  async create(clientData: CreateClientInput): Promise<Client> {
+    const newClient = await this.createClientUseCase.execute(clientData);
     this.clients.push(newClient);
     return newClient;
   }

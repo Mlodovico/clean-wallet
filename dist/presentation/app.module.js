@@ -10,14 +10,16 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const balance_module_1 = require("./balance/balance.module");
 const client_module_1 = require("./client/client.module");
+const wallet_module_1 = require("./wallet/wallet.module");
 const database_module_1 = require("../infrastructure/database/database.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [client_module_1.ClientModule, database_module_1.DatabaseModule],
+        imports: [client_module_1.ClientModule, balance_module_1.BalanceModule, wallet_module_1.WalletModule, database_module_1.DatabaseModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

@@ -1,24 +1,35 @@
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Client } from "src/domain/client/client.entity";
+import { Repository } from "typeorm";
+
+import { Client as ClientEntity } from "../../domain/client/client.entity";
+import {
+  ClientPersistenceRecord,
+  ClientRepositoryPort,
+  SavedClientRecord,
+} from "../../domain/client/ports/client-repository.port";
 
 @Injectable()
-export class ClientRepository {
+export class ClientRepository implements ClientRepositoryPort {
   constructor(
-    @InjectRepository(Client)
-    private readonly clientRepository: Repository<Client>
+    @InjectRepository(ClientEntity)
+    private readonly repository: Repository<ClientEntity>,
   ) {}
 
-  async create(client: Partial<Client>): Promise<Client> {
-    return this.clientRepository.save(client);
-  }
+  async save(record: ClientPersistenceRecord): Promise<SavedClientRecord> {
+    const saved = await this.repository.save(record);
 
-  async findAll(): Promise<Client[]> {
-    return this.clientRepository.find();
-  }
-
-  async findOne(id: number): Promise<Client | null> {
-    return this.clientRepository.findOneBy({ id });
+    return {
+      id: saved.id,
+      name: saved.name,
+      email: saved.email,
+      phone: saved.phone,
+      birthDate: saved.birthDate,
+      document: saved.document,
+      password: saved.password,
+      status: saved.status,
+      createdAt: saved.createdAt,
+      updatedAt: saved.updatedAt,
+    };
   }
 }

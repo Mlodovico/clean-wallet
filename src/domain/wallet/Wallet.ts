@@ -1,12 +1,11 @@
-import { Result } from "src/shared/utils/Result";
+import { Result } from "../../shared/utils/Result";
+import { ClientId } from "../client/vo/ClientId";
 import { WalletId } from "./vo/WalletId";
 import { WalletType } from "./vo/walletTypes";
 import { Currency } from "./vo/currency";
 import { WalletLimit } from "./vo/walletLimit";
-import { ClientId } from "../client/vo/ClientId";
 
-type RawWalletProps = {
-  id: string;
+export type RawWalletProps = {
   clientId: string;
   walletType: string;
   currency: number;
@@ -25,7 +24,7 @@ export class Wallet {
   ) {}
 
   static create(props: RawWalletProps): Result<Wallet> {
-    const walletIdResult = WalletId.create(props.id);
+    const walletIdResult = WalletId.generate();
     if (walletIdResult.isFailure) {
       return Result.fail<Wallet>(
         `Invalid wallet ID: ${walletIdResult.getError()}`,

@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Wallet = void 0;
 const Result_1 = require("../../shared/utils/Result");
+const ClientId_1 = require("../client/vo/ClientId");
 const WalletId_1 = require("./vo/WalletId");
 const walletTypes_1 = require("./vo/walletTypes");
 const currency_1 = require("./vo/currency");
 const walletLimit_1 = require("./vo/walletLimit");
-const ClientId_1 = require("../client/vo/ClientId");
 class Wallet {
     id;
     clientId;
@@ -25,7 +25,7 @@ class Wallet {
         this.updatedAt = updatedAt;
     }
     static create(props) {
-        const walletIdResult = WalletId_1.WalletId.create(props.id);
+        const walletIdResult = WalletId_1.WalletId.generate();
         if (walletIdResult.isFailure) {
             return Result_1.Result.fail(`Invalid wallet ID: ${walletIdResult.getError()}`);
         }

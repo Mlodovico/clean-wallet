@@ -13,10 +13,10 @@ class Currency {
         if (!Currency.is3CharactersLong(value)) {
             return Result_1.Result.fail(this.currencyErrors.currencyMustBe3CharactersLong().message);
         }
-        if (!Currency.isFinite(value)) {
+        if (!/^[A-Za-z]{3}$/.test(value)) {
             return Result_1.Result.fail(this.currencyErrors.currencyMustBeFinite().message);
         }
-        return Result_1.Result.ok(new Currency(value));
+        return Result_1.Result.ok(new Currency(value.toUpperCase()));
     }
     static is3CharactersLong(value) {
         return value.length === 3;

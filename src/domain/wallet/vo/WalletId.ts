@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { Result } from "src/shared/utils/Result";
 import { WalletIdErrors } from "../errors/walletid.errors";
 
@@ -20,6 +21,10 @@ export class WalletId {
     }
 
     return Result.ok(new WalletId(id));
+  }
+
+  static generate(): Result<WalletId> {
+    return WalletId.create(randomUUID());
   }
 
   getValue(): string {

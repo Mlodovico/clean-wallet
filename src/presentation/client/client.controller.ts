@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
 
-import { ClientService } from "./client.service";
+import { CreateClientInput } from "../../application/client/create-client.use-case";
 import { Client } from "../../domain/client/Client";
+import { ClientService } from "./client.service";
 
 @Controller("clients")
 export class ClientController {
@@ -13,17 +14,20 @@ export class ClientController {
   }
 
   @Post()
-  CreateNewClient(newClient: Client): Client {
+  createNewClient(@Body() newClient: CreateClientInput): Promise<Client> {
     return this.clientService.create(newClient);
   }
 
   @Put(":id")
-  updateClient(id: string, updateData: Partial<Client>): Client | undefined {
+  updateClient(
+    @Param("id") id: string,
+    @Body() updateData: Partial<Client>,
+  ): Client | undefined {
     return this.clientService.update(id, updateData);
   }
 
   @Get(":id")
-  findById(id: string): Client | undefined {
+  findById(@Param("id") id: string): Client | undefined {
     return this.clientService.findOne(id);
   }
 }

@@ -5,5 +5,6 @@ export declare class WalletId {
     private constructor();
     static walletIdErrors: typeof WalletIdErrors;
     static create(id: string): Result<WalletId>;
+    static generate(): Result<WalletId>;
     getValue(): string;
 }

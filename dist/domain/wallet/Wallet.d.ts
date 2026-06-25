@@ -1,11 +1,10 @@
 import { Result } from "../../shared/utils/Result";
+import { ClientId } from "../client/vo/ClientId";
 import { WalletId } from "./vo/WalletId";
 import { WalletType } from "./vo/walletTypes";
 import { Currency } from "./vo/currency";
 import { WalletLimit } from "./vo/walletLimit";
-import { ClientId } from "../client/vo/ClientId";
-type RawWalletProps = {
-    id: string;
+export type RawWalletProps = {
     clientId: string;
     walletType: string;
     currency: number;
@@ -22,4 +21,3 @@ export declare class Wallet {
     constructor(id: WalletId, clientId: ClientId, walletType: WalletType, currency: Currency, walletLimit: WalletLimit, createdAt: Date, updatedAt: Date);
     static create(props: RawWalletProps): Result<Wallet>;
 }
-export {};

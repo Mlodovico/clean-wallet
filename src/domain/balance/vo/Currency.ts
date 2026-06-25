@@ -13,13 +13,13 @@ export class Currency {
       );
     }
 
-    if (!Currency.isFinite(value)) {
+    if (!/^[A-Za-z]{3}$/.test(value)) {
       return Result.fail<Currency>(
         this.currencyErrors.currencyMustBeFinite().message,
       );
     }
 
-    return Result.ok<Currency>(new Currency(value));
+    return Result.ok<Currency>(new Currency(value.toUpperCase()));
   }
 
   static is3CharactersLong(value: string): boolean {
