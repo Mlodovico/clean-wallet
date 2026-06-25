@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { BalanceIdErrors } from "../errors/balance.errors";
 
 export class BalanceId {
-  private constructor(readonly value) {}
+  private constructor(private readonly value: string) {}
 
   static create(value: string) {
     if (typeof value !== "string") {

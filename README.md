@@ -1,98 +1,270 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Clean Wallet
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API backend em **NestJS** para gestão de carteiras digitais, organizada em **Clean Architecture** com domínios explícitos, casos de uso na camada de aplicação e observabilidade via **OpenTelemetry**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## O que é
 
-## Description
+O **clean-wallet** modela três contextos de negócio:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Domínio | Responsabilidade |
+|---|---|
+| **Client** | Cadastro e gestão de clientes |
+| **Wallet** | Carteiras vinculadas a um cliente |
+| **Balance** | Movimentações e saldo (depósitos, limites, transações) |
 
-## Project setup
+A API expõe endpoints REST para criar e listar recursos. As regras de validação ficam no domínio (Value Objects e agregados); a orquestração fica nos use cases; a persistência é feita via repositórios TypeORM.
 
-```bash
-$ pnpm install
+## Arquitetura
+
+O projeto separa responsabilidades em camadas:
+
+```
+src/
+├── domain/           # Regras de negócio, entidades, VOs e ports
+├── application/      # Use cases (uma ação por arquivo)
+├── infrastructure/   # TypeORM, repositórios concretos, database
+├── presentation/     # Controllers, services HTTP, módulos Nest
+└── shared/           # Utilitários compartilhados (ex.: Result)
 ```
 
-## Compile and run the project
+### Fluxo de uma requisição
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+HTTP Request
+  → Controller (presentation)
+  → Service (presentation)
+  → Use Case (application)
+  → Agregado.create() (domain)   # valida VOs e regras
+  → Repository Port (domain)
+  → Repository impl (infrastructure)   # persiste no PostgreSQL
+  → Resposta com agregado de domínio
 ```
 
-## Run tests
+Cada domínio segue o mesmo padrão:
 
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+```
+presentation/<domínio>/
+application/<domínio>/create-<domínio>.use-case.ts
+domain/<domínio>/ports/<domínio>-repository.port.ts
+infrastructure/repositories/<Domínio>Repository.ts
 ```
 
-## Deployment
+### Padrões utilizados
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- **Agregados** (`Client`, `Wallet`, `Balance`) com factory `create()` retornando `Result<T>`
+- **Value Objects** para validar email, telefone, moeda, valores monetários, etc.
+- **Ports & Adapters** — interfaces de repositório no domínio, implementação na infraestrutura
+- **Use cases** — classes `@Injectable()` com método `execute(input)`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Stack
+
+- [NestJS](https://nestjs.com/) 11
+- [TypeORM](https://typeorm.io/) + PostgreSQL 16
+- [OpenTelemetry](https://opentelemetry.io/) (traces via OTLP)
+- TypeScript, Jest, pnpm
+
+## Pré-requisitos
+
+- Node.js 20+
+- [pnpm](https://pnpm.io/)
+- [Docker](https://www.docker.com/) (para PostgreSQL e, opcionalmente, o collector OTEL)
+
+## Configuração
+
+### 1. Instalar dependências
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2. Variáveis de ambiente
 
-## Resources
+Crie um arquivo `.env` na raiz do projeto:
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+PORT=3000
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=clean-wallet-db
+```
 
-## Support
+> O PostgreSQL do Docker expõe a porta `5433` por padrão (mapeamento em `docker-compose.yml`).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Executando
 
-## Stay in touch
+### Ambiente completo (banco + app)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Sobe o PostgreSQL e inicia a API em modo watch:
 
-## License
+```bash
+pnpm dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Apenas o banco
+
+```bash
+pnpm db:up      # sobe PostgreSQL
+pnpm db:down    # para containers
+pnpm db:logs    # acompanha logs
+```
+
+### Apenas a aplicação
+
+Com o banco já rodando:
+
+```bash
+pnpm start:dev
+```
+
+Outros scripts úteis:
+
+```bash
+pnpm build        # compila para dist/
+pnpm start        # executa build com OpenTelemetry
+pnpm start:prod   # produção (dist/)
+pnpm lint         # ESLint
+```
+
+A API fica disponível em `http://localhost:3000` (ou na porta definida em `PORT`).
+
+## API
+
+### Clients
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/clients` | Lista clientes (em memória na camada de apresentação) |
+| `GET` | `/clients/:id` | Busca cliente por ID |
+| `POST` | `/clients` | Cria cliente |
+| `PUT` | `/clients/:id` | Atualiza cliente |
+
+**Exemplo — criar cliente:**
+
+```bash
+curl -X POST http://localhost:3000/clients \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Murilo Lodovico",
+    "phone": "11999999999",
+    "email": "murilo@example.com",
+    "birthDate": "1990-05-15",
+    "document": "52998224725",
+    "password": "Password1!",
+    "status": "active"
+  }'
+```
+
+### Wallets
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/wallets` | Lista carteiras |
+| `POST` | `/wallets` | Cria carteira |
+
+**Exemplo — criar carteira:**
+
+```bash
+curl -X POST http://localhost:3000/wallets \
+  -H "Content-Type: application/json" \
+  -d '{
+    "clientId": "550e8400-e29b-41d4-a716-446655440000",
+    "walletType": "personal",
+    "currency": 986,
+    "walletLimit": 5000
+  }'
+```
+
+> `walletType` aceita: `personal` ou `business`.
+
+### Balances
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/balances` | Lista saldos/movimentações |
+| `POST` | `/balances` | Registra movimentação de saldo |
+
+**Exemplo — criar balance:**
+
+```bash
+curl -X POST http://localhost:3000/balances \
+  -H "Content-Type: application/json" \
+  -d '{
+    "amount": 150.75,
+    "overdraftLimit": 50,
+    "currency": "BRL",
+    "transactionType": "deposit",
+    "transactionId": "txn-abc-123",
+    "description": "Initial balance"
+  }'
+```
+
+## Observabilidade
+
+A instrumentação OpenTelemetry fica em `instrumentation.ts` na raiz do projeto. Em desenvolvimento ela é carregada automaticamente via `start:dev`.
+
+Para subir o **OpenTelemetry Collector** local:
+
+```bash
+docker compose -f docker-compose.observability.yml up -d
+```
+
+O collector escuta nas portas **4317** (gRPC) e **4318** (HTTP) e usa a config em `otel-collector-config.yaml`.
+
+## Testes
+
+```bash
+pnpm test          # testes unitários (38 testes)
+pnpm test:watch    # modo interativo
+pnpm test:cov      # cobertura (relatório em coverage/)
+```
+
+Os testes cobrem:
+
+- Agregados de domínio (`Client`, `Wallet`, `Balance`)
+- Use cases de criação
+- Services de apresentação
+- Repositórios (com TypeORM mockado)
+- Utilitário `Result`
+
+Fixtures compartilhadas em `src/testing/fixtures/domain.fixtures.ts`.
+
+## Estrutura de pastas (resumo)
+
+```
+clean-wallet/
+├── instrumentation.ts          # bootstrap OpenTelemetry
+├── otel-collector-config.yaml
+├── docker-compose.yml            # PostgreSQL
+├── docker-compose.observability.yml
+├── scripts/
+│   ├── start-dev.sh
+│   └── stop-dev.sh
+├── test/
+│   ├── fixtures/
+│   └── mocks/
+└── src/
+    ├── application/
+    │   ├── client/create-client.use-case.ts
+    │   ├── wallet/create-wallet.use-case.ts
+    │   └── balance/create-balance.use-case.ts
+    ├── domain/
+    │   ├── client/
+    │   ├── wallet/
+    │   └── balance/
+    ├── infrastructure/
+    │   ├── database/
+    │   └── repositories/
+    ├── presentation/
+    │   ├── client/
+    │   ├── wallet/
+    │   ├── balance/
+    │   └── app.module.ts
+    └── main.ts
+```
+
+## Licença
+
+Projeto privado — `UNLICENSED`.

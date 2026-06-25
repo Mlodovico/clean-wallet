@@ -10,7 +10,6 @@ export class UniqueEntityId {
   }
 
   static isValid(id: string): boolean {
-    // Validation logic here
-    return true;
+    return id.trim().length > 0;
   }
 }
