@@ -14,12 +14,19 @@ const balance_module_1 = require("./balance/balance.module");
 const client_module_1 = require("./client/client.module");
 const wallet_module_1 = require("./wallet/wallet.module");
 const database_module_1 = require("../infrastructure/database/database.module");
+const health_module_1 = require("../infrastructure/health/health.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [client_module_1.ClientModule, balance_module_1.BalanceModule, wallet_module_1.WalletModule, database_module_1.DatabaseModule],
+        imports: [
+            client_module_1.ClientModule,
+            balance_module_1.BalanceModule,
+            wallet_module_1.WalletModule,
+            database_module_1.DatabaseModule,
+            health_module_1.HealthModule,
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

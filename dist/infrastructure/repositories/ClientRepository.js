@@ -16,6 +16,7 @@ exports.ClientRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const retry_1 = require("../../shared/resilience/retry");
 const client_entity_1 = require("../../domain/client/client.entity");
 let ClientRepository = class ClientRepository {
     repository;
@@ -23,7 +24,7 @@ let ClientRepository = class ClientRepository {
         this.repository = repository;
     }
     async save(record) {
-        const saved = await this.repository.save(record);
+        const saved = await (0, retry_1.withRetry)(() => this.repository.save(record));
         return {
             id: saved.id,
             name: saved.name,

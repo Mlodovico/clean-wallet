@@ -16,6 +16,7 @@ exports.BalanceRepository = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const retry_1 = require("../../shared/resilience/retry");
 const balance_entity_1 = require("../../domain/balance/balance.entity");
 let BalanceRepository = class BalanceRepository {
     repository;
@@ -23,7 +24,7 @@ let BalanceRepository = class BalanceRepository {
         this.repository = repository;
     }
     async save(record) {
-        const saved = await this.repository.save(record);
+        const saved = await (0, retry_1.withRetry)(() => this.repository.save(record));
         return {
             id: saved.id,
             amount: Number(saved.amount),

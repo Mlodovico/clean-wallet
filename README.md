@@ -213,10 +213,38 @@ docker compose -f docker-compose.observability.yml up -d
 
 O collector escuta nas portas **4317** (gRPC) e **4318** (HTTP) e usa a config em `otel-collector-config.yaml`.
 
+## Resiliência
+
+A aplicação inclui mecanismos para tolerar falhas transitórias e expor saúde operacional:
+
+| Mecanismo | Onde | Função |
+|---|---|---|
+| **Health checks** | `GET /health/live`, `GET /health/ready` | Liveness (app no ar) e readiness (banco acessível) |
+| **Retry com backoff** | `src/shared/resilience/retry.ts` | Reexecuta operações em falhas transitórias (rede/DB) |
+| **Pool + reconexão DB** | `DatabaseModule` | `retryAttempts`, `retryDelay` e pool configuráveis |
+| **Graceful shutdown** | `main.ts` | Encerra conexões ao receber `SIGTERM`/`SIGINT` |
+
+Variáveis opcionais no `.env`:
+
+```env
+DB_RETRY_ATTEMPTS=10
+DB_RETRY_DELAY_MS=3000
+DB_CONNECT_TIMEOUT_MS=10000
+DB_POOL_MAX=10
+DB_POOL_IDLE_TIMEOUT_MS=30000
+```
+
+Exemplos:
+
+```bash
+curl http://localhost:3000/health/live
+curl http://localhost:3000/health/ready
+```
+
 ## Testes
 
 ```bash
-pnpm test          # testes unitários (38 testes)
+pnpm test          # testes unitários
 pnpm test:watch    # modo interativo
 pnpm test:cov      # cobertura (relatório em coverage/)
 ```
@@ -227,6 +255,7 @@ Os testes cobrem:
 - Use cases de criação
 - Services de apresentação
 - Repositórios (com TypeORM mockado)
+- Utilitários de resiliência (`withRetry`, `isTransientError`)
 - Utilitário `Result`
 
 Fixtures compartilhadas em `src/testing/fixtures/domain.fixtures.ts`.
@@ -256,7 +285,10 @@ clean-wallet/
     │   └── balance/
     ├── infrastructure/
     │   ├── database/
+    │   ├── health/
     │   └── repositories/
+    ├── shared/
+    │   └── resilience/
     ├── presentation/
     │   ├── client/
     │   ├── wallet/

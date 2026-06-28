@@ -2,13 +2,16 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./presentation/app.module";
 
 async function bootstrap() {
-  try {
-    const app = await NestFactory.create(AppModule);
-    await app.listen(process.env.PORT ?? 3000);
-    console.log(`Application is running on: ${await app.getUrl()}`);
-  } catch (error) {
-    console.error("Error during application bootstrap", error);
-  }
+  const app = await NestFactory.create(AppModule);
+
+  app.enableShutdownHooks();
+
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
-void bootstrap();
+void bootstrap().catch((error) => {
+  console.error("Error during application bootstrap", error);
+  process.exit(1);
+});

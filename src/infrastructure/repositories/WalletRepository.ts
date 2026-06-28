@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
+import { withRetry } from "../../shared/resilience/retry";
 import { WalletEntity } from "../../domain/wallet/wallet.entity";
 import {
   WalletPersistenceRecord,
@@ -17,7 +18,7 @@ export class WalletRepository implements WalletRepositoryPort {
   ) {}
 
   async save(record: WalletPersistenceRecord): Promise<SavedWalletRecord> {
-    const saved = await this.repository.save(record);
+    const saved = await withRetry(() => this.repository.save(record));
 
     return {
       id: saved.id,
