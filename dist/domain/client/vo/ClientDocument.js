@@ -10,7 +10,7 @@ class ClientDocument {
     }
     static create(document) {
         const cleaned = document.replace(/\D/g, "");
-        if (!this.isValidCPF) {
+        if (!this.isValidCPF(cleaned)) {
             return Result_1.Result.fail(document_errors_1.DocumentErrors.invalidDocumentFormat().message);
         }
         return Result_1.Result.ok(new ClientDocument(cleaned));

@@ -12,6 +12,8 @@ export const validCreateClientInput: CreateClientInput = {
   status: "active",
 };
 
+export const anotherValidDocument = "11144477735";
+
 export const validCreateBalanceInput: CreateBalanceInput = {
   amount: 150.75,
   overdraftLimit: 50,

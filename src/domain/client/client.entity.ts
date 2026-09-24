@@ -11,6 +11,9 @@ export class Client {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ type: "uuid", unique: true })
+  publicId!: string;
+
   @Column()
   name!: string;
 
@@ -23,7 +26,7 @@ export class Client {
   @Column()
   birthDate!: Date;
 
-  @Column()
+  @Column({ unique: true })
   document!: string;
 
   @Column()

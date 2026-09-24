@@ -12,11 +12,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientService = void 0;
 const common_1 = require("@nestjs/common");
 const create_client_use_case_1 = require("../../application/client/create-client.use-case");
+const get_client_use_case_1 = require("../../application/client/get-client.use-case");
+const update_client_use_case_1 = require("../../application/client/update-client.use-case");
 let ClientService = class ClientService {
     createClientUseCase;
+    getClientUseCase;
+    updateClientUseCase;
     clients = [];
-    constructor(createClientUseCase) {
+    constructor(createClientUseCase, getClientUseCase, updateClientUseCase) {
         this.createClientUseCase = createClientUseCase;
+        this.getClientUseCase = getClientUseCase;
+        this.updateClientUseCase = updateClientUseCase;
     }
     findAll() {
         return this.clients;
@@ -27,25 +33,17 @@ let ClientService = class ClientService {
         return newClient;
     }
     findOne(id) {
-        return this.clients.find((client) => client.id.getValue() === id);
+        return this.getClientUseCase.execute(id);
     }
     update(id, updateData) {
-        const clientIndex = this.clients.findIndex((client) => client.id.getValue() === id);
-        if (clientIndex === -1) {
-            return undefined;
-        }
-        const updatedClient = {
-            ...this.clients[clientIndex],
-            ...updateData,
-            updatedAt: new Date(),
-        };
-        this.clients[clientIndex] = updatedClient;
-        return updatedClient;
+        return this.updateClientUseCase.execute({ id, ...updateData });
     }
 };
 exports.ClientService = ClientService;
 exports.ClientService = ClientService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [create_client_use_case_1.CreateClientUseCase])
+    __metadata("design:paramtypes", [create_client_use_case_1.CreateClientUseCase,
+        get_client_use_case_1.GetClientUseCase,
+        update_client_use_case_1.UpdateClientUseCase])
 ], ClientService);
 //# sourceMappingURL=client.service.js.map

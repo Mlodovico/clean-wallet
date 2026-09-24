@@ -53,14 +53,14 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], ClientController.prototype, "updateClient", null);
 __decorate([
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], ClientController.prototype, "findById", null);
 exports.ClientController = ClientController = __decorate([
     (0, common_1.Controller)("clients"),

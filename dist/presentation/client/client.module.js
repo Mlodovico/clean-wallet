@@ -10,6 +10,8 @@ exports.ClientModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const create_client_use_case_1 = require("../../application/client/create-client.use-case");
+const get_client_use_case_1 = require("../../application/client/get-client.use-case");
+const update_client_use_case_1 = require("../../application/client/update-client.use-case");
 const client_entity_1 = require("../../domain/client/client.entity");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
 const ClientRepository_1 = require("../../infrastructure/repositories/ClientRepository");
@@ -25,12 +27,19 @@ exports.ClientModule = ClientModule = __decorate([
         providers: [
             client_service_1.ClientService,
             create_client_use_case_1.CreateClientUseCase,
+            get_client_use_case_1.GetClientUseCase,
+            update_client_use_case_1.UpdateClientUseCase,
             {
                 provide: client_repository_port_1.ClientRepositoryPort,
                 useClass: ClientRepository_1.ClientRepository,
             },
         ],
-        exports: [client_service_1.ClientService, create_client_use_case_1.CreateClientUseCase],
+        exports: [
+            client_service_1.ClientService,
+            create_client_use_case_1.CreateClientUseCase,
+            get_client_use_case_1.GetClientUseCase,
+            update_client_use_case_1.UpdateClientUseCase,
+        ],
     })
 ], ClientModule);
 //# sourceMappingURL=client.module.js.map

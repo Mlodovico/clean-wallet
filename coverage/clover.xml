@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1782356206536" clover="3.2.0">
-  <project timestamp="1782356206536" name="All files">
-    <metrics statements="243" coveredstatements="220" conditionals="36" coveredconditionals="21" methods="41" coveredmethods="39" elements="320" coveredelements="280" complexity="0" loc="243" ncloc="243" packages="14" files="16" classes="16"/>
+<coverage generated="1788966309626" clover="3.2.0">
+  <project timestamp="1788966309627" name="All files">
+    <metrics statements="329" coveredstatements="305" conditionals="67" coveredconditionals="51" methods="60" coveredmethods="58" elements="456" coveredelements="414" complexity="0" loc="329" ncloc="329" packages="14" files="18" classes="18"/>
     <package name="application.balance">
       <metrics statements="14" coveredstatements="14" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="3"/>
       <file name="create-balance.use-case.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/application/balance/create-balance.use-case.ts">
@@ -23,24 +23,80 @@
       </file>
     </package>
     <package name="application.client">
-      <metrics statements="15" coveredstatements="15" conditionals="3" coveredconditionals="3" methods="3" coveredmethods="3"/>
+      <metrics statements="65" coveredstatements="65" conditionals="13" coveredconditionals="13" methods="9" coveredmethods="9"/>
       <file name="create-client.use-case.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/application/client/create-client.use-case.ts">
-        <metrics statements="15" coveredstatements="15" conditionals="3" coveredconditionals="3" methods="3" coveredmethods="3"/>
+        <metrics statements="19" coveredstatements="19" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
         <line num="1" count="2" type="stmt"/>
-        <line num="7" count="2" type="stmt"/>
         <line num="8" count="2" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
-        <line num="25" count="4" type="stmt"/>
-        <line num="29" count="4" type="cond" truecount="2" falsecount="0"/>
-        <line num="33" count="4" type="stmt"/>
-        <line num="43" count="4" type="cond" truecount="1" falsecount="0"/>
-        <line num="44" count="1" type="stmt"/>
-        <line num="47" count="3" type="stmt"/>
-        <line num="49" count="3" type="stmt"/>
-        <line num="50" count="3" type="stmt"/>
-        <line num="52" count="1" type="stmt"/>
-        <line num="55" count="2" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="31" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="35" count="5" type="stmt"/>
+        <line num="45" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="49" count="4" type="stmt"/>
+        <line num="50" count="4" type="stmt"/>
+        <line num="54" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="55" count="1" type="stmt"/>
+        <line num="58" count="3" type="stmt"/>
         <line num="59" count="3" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="64" count="2" type="stmt"/>
+        <line num="68" count="3" type="stmt"/>
+      </file>
+      <file name="get-client.use-case.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/application/client/get-client.use-case.ts">
+        <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="3" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="25" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+      </file>
+      <file name="update-client.use-case.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/application/client/update-client.use-case.ts">
+        <metrics statements="34" coveredstatements="34" conditionals="7" coveredconditionals="7" methods="4" coveredmethods="4"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="30" count="2" type="stmt"/>
+        <line num="31" count="9" type="stmt"/>
+        <line num="34" count="9" type="stmt"/>
+        <line num="35" count="9" type="cond" truecount="1" falsecount="0"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="39" count="8" type="stmt"/>
+        <line num="40" count="8" type="stmt"/>
+        <line num="42" count="8" type="cond" truecount="1" falsecount="0"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="46" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="50" count="5" type="stmt"/>
+        <line num="60" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="64" count="4" type="stmt"/>
+        <line num="66" count="4" type="stmt"/>
+        <line num="67" count="4" type="stmt"/>
+        <line num="72" count="1" type="stmt"/>
+        <line num="75" count="3" type="stmt"/>
+        <line num="82" count="4" type="stmt"/>
+        <line num="83" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="89" count="3" type="stmt"/>
+        <line num="90" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="95" count="2" type="stmt"/>
+        <line num="97" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="103" count="4" type="stmt"/>
       </file>
     </package>
     <package name="application.wallet">
@@ -114,70 +170,80 @@
       </file>
     </package>
     <package name="domain.client">
-      <metrics statements="54" coveredstatements="38" conditionals="11" coveredconditionals="3" methods="4" coveredmethods="2"/>
+      <metrics statements="64" coveredstatements="47" conditionals="27" coveredconditionals="18" methods="7" coveredmethods="5"/>
       <file name="Client.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/domain/client/Client.ts">
-        <metrics statements="54" coveredstatements="38" conditionals="11" coveredconditionals="3" methods="4" coveredmethods="2"/>
-        <line num="1" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="4" count="3" type="stmt"/>
-        <line num="5" count="3" type="stmt"/>
-        <line num="6" count="3" type="stmt"/>
-        <line num="7" count="3" type="stmt"/>
-        <line num="8" count="3" type="stmt"/>
-        <line num="9" count="3" type="stmt"/>
-        <line num="10" count="3" type="stmt"/>
-        <line num="22" count="3" type="stmt"/>
-        <line num="24" count="7" type="stmt"/>
-        <line num="25" count="7" type="stmt"/>
-        <line num="26" count="7" type="stmt"/>
-        <line num="27" count="7" type="stmt"/>
-        <line num="28" count="7" type="stmt"/>
-        <line num="29" count="7" type="stmt"/>
-        <line num="30" count="7" type="stmt"/>
-        <line num="31" count="7" type="stmt"/>
-        <line num="32" count="7" type="stmt"/>
-        <line num="33" count="7" type="stmt"/>
-        <line num="39" count="11" type="stmt"/>
-        <line num="40" count="11" type="cond" truecount="1" falsecount="0"/>
-        <line num="41" count="1" type="stmt"/>
-        <line num="44" count="10" type="stmt"/>
-        <line num="45" count="10" type="cond" truecount="0" falsecount="1"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="49" count="10" type="stmt"/>
-        <line num="50" count="10" type="cond" truecount="1" falsecount="0"/>
-        <line num="51" count="2" type="stmt"/>
-        <line num="54" count="8" type="stmt"/>
-        <line num="55" count="8" type="cond" truecount="0" falsecount="1"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="61" count="8" type="stmt"/>
-        <line num="62" count="8" type="cond" truecount="0" falsecount="1"/>
-        <line num="63" count="0" type="stmt"/>
-        <line num="68" count="8" type="stmt"/>
-        <line num="69" count="8" type="cond" truecount="0" falsecount="1"/>
-        <line num="70" count="0" type="stmt"/>
-        <line num="75" count="8" type="stmt"/>
-        <line num="76" count="8" type="cond" truecount="1" falsecount="0"/>
-        <line num="77" count="1" type="stmt"/>
-        <line num="80" count="7" type="stmt"/>
-        <line num="97" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="101" count="0" type="stmt"/>
-        <line num="102" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="103" count="0" type="stmt"/>
-        <line num="106" count="0" type="stmt"/>
-        <line num="121" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="122" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="126" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="127" count="0" type="stmt"/>
-        <line num="130" count="0" type="stmt"/>
+        <metrics statements="64" coveredstatements="47" conditionals="27" coveredconditionals="18" methods="7" coveredmethods="5"/>
+        <line num="1" count="6" type="stmt"/>
+        <line num="3" count="6" type="stmt"/>
+        <line num="4" count="6" type="stmt"/>
+        <line num="5" count="6" type="stmt"/>
+        <line num="6" count="6" type="stmt"/>
+        <line num="7" count="6" type="stmt"/>
+        <line num="8" count="6" type="stmt"/>
+        <line num="9" count="6" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
+        <line num="28" count="6" type="stmt"/>
+        <line num="30" count="32" type="stmt"/>
+        <line num="31" count="32" type="stmt"/>
+        <line num="32" count="32" type="stmt"/>
+        <line num="33" count="32" type="stmt"/>
+        <line num="34" count="32" type="stmt"/>
+        <line num="35" count="32" type="stmt"/>
+        <line num="36" count="32" type="stmt"/>
+        <line num="37" count="32" type="stmt"/>
+        <line num="38" count="32" type="stmt"/>
+        <line num="39" count="32" type="stmt"/>
+        <line num="45" count="13" type="stmt"/>
+        <line num="46" count="13" type="cond" truecount="0" falsecount="1"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="50" count="13" type="stmt"/>
+        <line num="52" count="13" type="stmt"/>
+        <line num="61" count="19" type="stmt"/>
+        <line num="65" count="7" type="stmt"/>
+        <line num="80" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="85" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="104" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="105" count="0" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="109" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="110" count="0" type="stmt"/>
+        <line num="113" count="0" type="stmt"/>
+        <line num="128" count="39" type="stmt"/>
+        <line num="129" count="39" type="cond" truecount="1" falsecount="0"/>
+        <line num="130" count="1" type="stmt"/>
+        <line num="133" count="38" type="stmt"/>
+        <line num="134" count="38" type="cond" truecount="1" falsecount="0"/>
+        <line num="135" count="1" type="stmt"/>
+        <line num="138" count="37" type="stmt"/>
+        <line num="139" count="37" type="cond" truecount="0" falsecount="1"/>
+        <line num="140" count="0" type="stmt"/>
+        <line num="143" count="37" type="stmt"/>
+        <line num="144" count="37" type="cond" truecount="1" falsecount="0"/>
+        <line num="145" count="4" type="stmt"/>
+        <line num="148" count="33" type="stmt"/>
+        <line num="149" count="33" type="cond" truecount="0" falsecount="1"/>
+        <line num="150" count="0" type="stmt"/>
+        <line num="155" count="33" type="stmt"/>
+        <line num="156" count="33" type="cond" truecount="0" falsecount="1"/>
+        <line num="157" count="0" type="stmt"/>
+        <line num="162" count="33" type="stmt"/>
+        <line num="163" count="33" type="cond" truecount="0" falsecount="1"/>
+        <line num="164" count="0" type="stmt"/>
+        <line num="169" count="33" type="stmt"/>
+        <line num="170" count="33" type="cond" truecount="1" falsecount="0"/>
+        <line num="171" count="1" type="stmt"/>
+        <line num="174" count="32" type="stmt"/>
       </file>
     </package>
     <package name="domain.client.ports">
       <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="client-repository.port.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/domain/client/ports/client-repository.port.ts">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="17" count="2" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
       </file>
     </package>
     <package name="domain.wallet">
@@ -224,39 +290,67 @@
       </file>
     </package>
     <package name="infrastructure.repositories">
-      <metrics statements="24" coveredstatements="24" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+      <metrics statements="52" coveredstatements="52" conditionals="6" coveredconditionals="6" methods="18" coveredmethods="18"/>
       <file name="BalanceRepository.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/infrastructure/repositories/BalanceRepository.ts">
-        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
       </file>
       <file name="ClientRepository.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/infrastructure/repositories/ClientRepository.ts">
-        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <metrics statements="34" coveredstatements="34" conditionals="6" coveredconditionals="6" methods="12" coveredmethods="12"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
         <line num="22" count="1" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="35" count="2" type="cond" truecount="1" falsecount="0"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="39" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
+        <line num="49" count="1" type="stmt"/>
+        <line num="53" count="3" type="stmt"/>
+        <line num="54" count="3" type="stmt"/>
+        <line num="57" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="61" count="2" type="stmt"/>
+        <line num="62" count="2" type="stmt"/>
+        <line num="65" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="69" count="2" type="stmt"/>
+        <line num="85" count="3" type="stmt"/>
+        <line num="98" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="104" count="2" type="stmt"/>
       </file>
       <file name="WalletRepository.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/infrastructure/repositories/WalletRepository.ts">
-        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
-        <line num="13" count="1" type="stmt"/>
-        <line num="16" count="1" type="stmt"/>
-        <line num="20" count="1" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
       </file>
     </package>
     <package name="presentation.balance">
@@ -275,25 +369,23 @@
       </file>
     </package>
     <package name="presentation.client">
-      <metrics statements="17" coveredstatements="17" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="7"/>
+      <metrics statements="15" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
       <file name="client.service.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/presentation/client/client.service.ts">
-        <metrics statements="17" coveredstatements="17" conditionals="1" coveredconditionals="1" methods="7" coveredmethods="7"/>
+        <metrics statements="15" coveredstatements="15" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
-        <line num="11" count="5" type="stmt"/>
-        <line num="13" count="5" type="stmt"/>
-        <line num="16" count="2" type="stmt"/>
-        <line num="20" count="3" type="stmt"/>
-        <line num="21" count="3" type="stmt"/>
-        <line num="22" count="3" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
-        <line num="30" count="2" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="4" type="stmt"/>
+        <line num="19" count="4" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="21" count="4" type="stmt"/>
+        <line num="25" count="2" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
         <line num="31" count="1" type="stmt"/>
-        <line num="33" count="2" type="cond" truecount="1" falsecount="0"/>
-        <line num="34" count="1" type="stmt"/>
-        <line num="36" count="1" type="stmt"/>
-        <line num="41" count="1" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
         <line num="42" count="1" type="stmt"/>
       </file>
     </package>
@@ -316,23 +408,23 @@
       <metrics statements="17" coveredstatements="15" conditionals="8" coveredconditionals="6" methods="5" coveredmethods="5"/>
       <file name="Result.ts" path="/Users/murilolodovico/Desktop/projects/clean-wallet/src/shared/utils/Result.ts">
         <metrics statements="17" coveredstatements="15" conditionals="8" coveredconditionals="6" methods="5" coveredmethods="5"/>
-        <line num="1" count="10" type="stmt"/>
-        <line num="8" count="177" type="stmt"/>
-        <line num="9" count="177" type="stmt"/>
-        <line num="10" count="177" type="stmt"/>
-        <line num="11" count="177" type="stmt"/>
-        <line num="13" count="177" type="cond" truecount="2" falsecount="1"/>
+        <line num="1" count="13" type="stmt"/>
+        <line num="8" count="472" type="stmt"/>
+        <line num="9" count="472" type="stmt"/>
+        <line num="10" count="472" type="stmt"/>
+        <line num="11" count="472" type="stmt"/>
+        <line num="13" count="472" type="cond" truecount="2" falsecount="1"/>
         <line num="14" count="0" type="stmt"/>
-        <line num="19" count="177" type="cond" truecount="2" falsecount="1"/>
+        <line num="19" count="472" type="cond" truecount="2" falsecount="1"/>
         <line num="20" count="0" type="stmt"/>
-        <line num="27" count="122" type="cond" truecount="1" falsecount="0"/>
+        <line num="27" count="378" type="cond" truecount="1" falsecount="0"/>
         <line num="28" count="1" type="stmt"/>
-        <line num="31" count="121" type="stmt"/>
-        <line num="35" count="26" type="cond" truecount="1" falsecount="0"/>
+        <line num="31" count="377" type="stmt"/>
+        <line num="35" count="35" type="cond" truecount="1" falsecount="0"/>
         <line num="36" count="1" type="stmt"/>
-        <line num="39" count="25" type="stmt"/>
-        <line num="43" count="151" type="stmt"/>
-        <line num="47" count="26" type="stmt"/>
+        <line num="39" count="34" type="stmt"/>
+        <line num="43" count="437" type="stmt"/>
+        <line num="47" count="35" type="stmt"/>
       </file>
     </package>
   </project>

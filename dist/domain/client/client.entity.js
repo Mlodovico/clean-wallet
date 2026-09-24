@@ -13,6 +13,7 @@ exports.Client = void 0;
 const typeorm_1 = require("typeorm");
 let Client = class Client {
     id;
+    publicId;
     name;
     email;
     phone;
@@ -28,6 +29,10 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Client.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: "uuid", unique: true }),
+    __metadata("design:type", String)
+], Client.prototype, "publicId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -45,7 +50,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Client.prototype, "birthDate", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Client.prototype, "document", void 0);
 __decorate([

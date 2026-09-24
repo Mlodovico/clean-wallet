@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -113,22 +113,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,18 +145,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,13 +157,22 @@ import {
   CreateClientInput,
   CreateClientUseCase,
 } from "../../application/client/create-client.use-case";
+import { GetClientUseCase } from "../../application/client/get-client.use-case";
+import {
+  UpdateClientInput,
+  UpdateClientUseCase,
+} from "../../application/client/update-client.use-case";
 import { Client } from "../../domain/client/Client";
 &nbsp;
 @Injectable()
 export class ClientService {
   private clients: Client[] = [];
 &nbsp;
-  constructor(private readonly createClientUseCase: CreateClientUseCase) {}
+  constructor(
+    private readonly createClientUseCase: CreateClientUseCase,
+    private readonly getClientUseCase: GetClientUseCase,
+    private readonly updateClientUseCase: UpdateClientUseCase,
+  ) {}
 &nbsp;
   findAll(): Client[] {
     return this.clients;
@@ -175,24 +184,15 @@ export class ClientService {
     return newClient;
   }
 &nbsp;
-  findOne(id: string): Client | undefined {
-    return this.clients.find((client) =&gt; client.id.getValue() === id);
+  findOne(id: string): Promise&lt;Client&gt; {
+    return this.getClientUseCase.execute(id);
   }
 &nbsp;
-  update(id: string, updateData: Partial&lt;Client&gt;): Client | undefined {
-    const clientIndex = this.clients.findIndex(
-      (client) =&gt; client.id.getValue() === id,
-    );
-    if (clientIndex === -1) {
-      return undefined;
-    }
-    const updatedClient = {
-      ...this.clients[clientIndex],
-      ...updateData,
-      updatedAt: new Date(),
-    };
-    this.clients[clientIndex] = updatedClient as Client;
-    return updatedClient as Client;
+  update(
+    id: string,
+    updateData: Omit&lt;UpdateClientInput, "id"&gt;,
+  ): Promise&lt;Client&gt; {
+    return this.updateClientUseCase.execute({ id, ...updateData });
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -202,7 +202,7 @@ export class ClientService {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-25T02:56:46.499Z
+                at 2026-09-09T15:05:09.538Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

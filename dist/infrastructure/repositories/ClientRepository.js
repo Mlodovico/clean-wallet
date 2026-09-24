@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const retry_1 = require("../../shared/resilience/retry");
+const Client_1 = require("../../domain/client/Client");
 const client_entity_1 = require("../../domain/client/client.entity");
 let ClientRepository = class ClientRepository {
     repository;
@@ -25,8 +26,35 @@ let ClientRepository = class ClientRepository {
     }
     async save(record) {
         const saved = await (0, retry_1.withRetry)(() => this.repository.save(record));
+        return this.toSavedRecord(saved);
+    }
+    async update(publicId, record) {
+        const existing = await (0, retry_1.withRetry)(() => this.repository.findOneBy({ publicId }));
+        if (!existing) {
+            throw new Error("Client not found");
+        }
+        existing.name = record.name;
+        existing.email = record.email;
+        existing.phone = record.phone;
+        existing.birthDate = record.birthDate;
+        existing.document = record.document;
+        existing.password = record.password;
+        existing.status = record.status;
+        const saved = await (0, retry_1.withRetry)(() => this.repository.save(existing));
+        return this.toSavedRecord(saved);
+    }
+    async findById(publicId) {
+        const entity = await (0, retry_1.withRetry)(() => this.repository.findOneBy({ publicId }));
+        return entity ? this.toDomain(entity) : null;
+    }
+    async findByDocument(document) {
+        const entity = await (0, retry_1.withRetry)(() => this.repository.findOneBy({ document }));
+        return entity ? this.toDomain(entity) : null;
+    }
+    toSavedRecord(saved) {
         return {
             id: saved.id,
+            publicId: saved.publicId,
             name: saved.name,
             email: saved.email,
             phone: saved.phone,
@@ -37,6 +65,24 @@ let ClientRepository = class ClientRepository {
             createdAt: saved.createdAt,
             updatedAt: saved.updatedAt,
         };
+    }
+    toDomain(entity) {
+        const result = Client_1.Client.reconstitute({
+            id: entity.publicId,
+            name: entity.name,
+            email: entity.email,
+            phone: entity.phone,
+            birthDate: entity.birthDate,
+            document: entity.document,
+            password: entity.password,
+            status: entity.status,
+            createdAt: entity.createdAt,
+            updatedAt: entity.updatedAt,
+        });
+        if (result.isFailure) {
+            throw new Error(`Invalid persisted client ${entity.publicId}: ${result.getError()}`);
+        }
+        return result.getValue();
     }
 };
 exports.ClientRepository = ClientRepository;

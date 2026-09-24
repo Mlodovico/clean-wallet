@@ -13,10 +13,16 @@ type RawClientProps = {
   name: string;
   phone: string;
   email: string;
-  birthDate: Date;
+  birthDate: Date | string;
   document: string;
   password: string;
   status: string;
+};
+
+type ReconstituteClientProps = RawClientProps & {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export class Client {
@@ -36,61 +42,38 @@ export class Client {
   // Melhoria: montar erros customizados
 
   static create(props: RawClientProps): Result<Client> {
-    const nameResult = Name.create(props.name);
-    if (nameResult.isFailure) {
-      return Result.fail<Client>(`Invalid name: ${nameResult.getError()}`);
+    const idResult = ClientId.create();
+    if (idResult.isFailure) {
+      return Result.fail<Client>(`Invalid client id: ${idResult.getError()}`);
     }
 
-    const phoneResult = Phone.create(props.phone);
-    if (phoneResult.isFailure) {
-      return Result.fail<Client>(`Invalid phone: ${phoneResult.getError()}`);
-    }
+    const now = new Date();
 
-    const emailResult = Email.create(props.email);
-    if (emailResult.isFailure) {
-      return Result.fail<Client>(`Invalid email: ${emailResult.getError()}`);
-    }
+    return Client.build({
+      ...props,
+      id: idResult.getValue().getValue(),
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
 
-    const birthDateResult = Birthdate.create(props.birthDate);
-    if (birthDateResult.isFailure) {
-      return Result.fail<Client>(
-        `Invalid birth date: ${birthDateResult.getError()}`,
-      );
-    }
+  static reconstitute(props: ReconstituteClientProps): Result<Client> {
+    return Client.build(props);
+  }
 
-    const documentResult = ClientDocument.create(props.document);
-    if (documentResult.isFailure) {
-      return Result.fail<Client>(
-        `Invalid document: ${documentResult.getError()}`,
-      );
-    }
-
-    const passwordResult = Password.create(props.password);
-    if (passwordResult.isFailure) {
-      return Result.fail<Client>(
-        `Invalid password: ${passwordResult.getError()}`,
-      );
-    }
-
-    const statusResult = Status.create(props.status);
-    if (statusResult.isFailure) {
-      return Result.fail<Client>(`Invalid status: ${statusResult.getError()}`);
-    }
-
-    return Result.ok(
-      new Client(
-        ClientId.create().getValue(),
-        nameResult.getValue(),
-        phoneResult.getValue(),
-        emailResult.getValue(),
-        birthDateResult.getValue(),
-        documentResult.getValue(),
-        passwordResult.getValue(),
-        statusResult.getValue(),
-        new Date(),
-        new Date(),
-      ),
-    );
+  update(changes: Partial<RawClientProps>): Result<Client> {
+    return Client.build({
+      id: this.id.getValue(),
+      name: changes.name ?? this.name.getValue(),
+      phone: changes.phone ?? this.phone.getValue(),
+      email: changes.email ?? this.email.getValue(),
+      birthDate: changes.birthDate ?? this.birthDate.getValue(),
+      document: changes.document ?? this.document.getValue(),
+      password: changes.password ?? this.password.getValue(),
+      status: changes.status ?? this.status.getValue(),
+      createdAt: this.createdAt,
+      updatedAt: new Date(),
+    });
   }
 
   static activate(client: Client): Client {
@@ -138,6 +121,69 @@ export class Client {
       client.status,
       client.createdAt,
       client.updatedAt,
+    );
+  }
+
+  private static build(props: ReconstituteClientProps): Result<Client> {
+    const idResult = ClientId.create(props.id);
+    if (idResult.isFailure) {
+      return Result.fail<Client>(`Invalid client id: ${idResult.getError()}`);
+    }
+
+    const nameResult = Name.create(props.name);
+    if (nameResult.isFailure) {
+      return Result.fail<Client>(`Invalid name: ${nameResult.getError()}`);
+    }
+
+    const phoneResult = Phone.create(props.phone);
+    if (phoneResult.isFailure) {
+      return Result.fail<Client>(`Invalid phone: ${phoneResult.getError()}`);
+    }
+
+    const emailResult = Email.create(props.email);
+    if (emailResult.isFailure) {
+      return Result.fail<Client>(`Invalid email: ${emailResult.getError()}`);
+    }
+
+    const birthDateResult = Birthdate.create(props.birthDate);
+    if (birthDateResult.isFailure) {
+      return Result.fail<Client>(
+        `Invalid birth date: ${birthDateResult.getError()}`,
+      );
+    }
+
+    const documentResult = ClientDocument.create(props.document);
+    if (documentResult.isFailure) {
+      return Result.fail<Client>(
+        `Invalid document: ${documentResult.getError()}`,
+      );
+    }
+
+    const passwordResult = Password.create(props.password);
+    if (passwordResult.isFailure) {
+      return Result.fail<Client>(
+        `Invalid password: ${passwordResult.getError()}`,
+      );
+    }
+
+    const statusResult = Status.create(props.status);
+    if (statusResult.isFailure) {
+      return Result.fail<Client>(`Invalid status: ${statusResult.getError()}`);
+    }
+
+    return Result.ok(
+      new Client(
+        idResult.getValue(),
+        nameResult.getValue(),
+        phoneResult.getValue(),
+        emailResult.getValue(),
+        birthDateResult.getValue(),
+        documentResult.getValue(),
+        passwordResult.getValue(),
+        statusResult.getValue(),
+        props.createdAt,
+        props.updatedAt,
+      ),
     );
   }
 }

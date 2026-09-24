@@ -11,10 +11,15 @@ type RawClientProps = {
     name: string;
     phone: string;
     email: string;
-    birthDate: Date;
+    birthDate: Date | string;
     document: string;
     password: string;
     status: string;
+};
+type ReconstituteClientProps = RawClientProps & {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
 };
 export declare class Client {
     readonly id: ClientId;
@@ -29,7 +34,10 @@ export declare class Client {
     readonly updatedAt: Date;
     constructor(id: ClientId, name: Name, phone: Phone, email: Email, birthDate: Birthdate, document: ClientDocument, password: Password, status: Status, createdAt: Date, updatedAt: Date);
     static create(props: RawClientProps): Result<Client>;
+    static reconstitute(props: ReconstituteClientProps): Result<Client>;
+    update(changes: Partial<RawClientProps>): Result<Client>;
     static activate(client: Client): Client;
     static deactivate(client: Client): Client;
+    private static build;
 }
 export {};

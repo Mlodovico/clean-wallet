@@ -7,7 +7,7 @@ export class ClientDocument {
   static create(document: string): Result<ClientDocument> {
     const cleaned = document.replace(/\D/g, "");
 
-    if (!this.isValidCPF) {
+    if (!this.isValidCPF(cleaned)) {
       return Result.fail<ClientDocument>(
         DocumentErrors.invalidDocumentFormat().message,
       );

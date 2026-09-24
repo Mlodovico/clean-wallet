@@ -1,4 +1,6 @@
+import { Client } from "../Client";
 export type ClientPersistenceRecord = {
+    publicId: string;
     name: string;
     email: string;
     phone: string;
@@ -14,4 +16,7 @@ export type SavedClientRecord = ClientPersistenceRecord & {
 };
 export declare abstract class ClientRepositoryPort {
     abstract save(record: ClientPersistenceRecord): Promise<SavedClientRecord>;
+    abstract update(publicId: string, record: ClientPersistenceRecord): Promise<SavedClientRecord>;
+    abstract findById(publicId: string): Promise<Client | null>;
+    abstract findByDocument(document: string): Promise<Client | null>;
 }

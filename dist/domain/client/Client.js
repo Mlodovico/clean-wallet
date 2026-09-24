@@ -34,6 +34,60 @@ class Client {
         this.updatedAt = updatedAt;
     }
     static create(props) {
+        const idResult = ClientId_1.ClientId.create();
+        if (idResult.isFailure) {
+            return Result_1.Result.fail(`Invalid client id: ${idResult.getError()}`);
+        }
+        const now = new Date();
+        return Client.build({
+            ...props,
+            id: idResult.getValue().getValue(),
+            createdAt: now,
+            updatedAt: now,
+        });
+    }
+    static reconstitute(props) {
+        return Client.build(props);
+    }
+    update(changes) {
+        return Client.build({
+            id: this.id.getValue(),
+            name: changes.name ?? this.name.getValue(),
+            phone: changes.phone ?? this.phone.getValue(),
+            email: changes.email ?? this.email.getValue(),
+            birthDate: changes.birthDate ?? this.birthDate.getValue(),
+            document: changes.document ?? this.document.getValue(),
+            password: changes.password ?? this.password.getValue(),
+            status: changes.status ?? this.status.getValue(),
+            createdAt: this.createdAt,
+            updatedAt: new Date(),
+        });
+    }
+    static activate(client) {
+        if (client.status.asString === "active") {
+            throw new Error("Client is already active");
+        }
+        const statusResult = Status_1.Status.create("active");
+        if (statusResult.isFailure) {
+            throw new Error(`Failed to activate client: ${statusResult.getError()}`);
+        }
+        return new Client(client.id, client.name, client.phone, client.email, client.birthDate, client.document, client.password, client.status, client.createdAt, client.updatedAt);
+    }
+    static deactivate(client) {
+        if (client.status.asString === "inactive") {
+            throw new Error("Client is already inactive");
+        }
+        const statusResult = Status_1.Status.create("deactive");
+        if (statusResult.isFailure) {
+            throw new Error(`Failed to deactive client: ${statusResult.isFailure}`);
+        }
+        return new Client(client.id, client.name, client.phone, client.email, client.birthDate, client.document, client.password, client.status, client.createdAt, client.updatedAt);
+    }
+    static build(props) {
+        const idResult = ClientId_1.ClientId.create(props.id);
+        if (idResult.isFailure) {
+            return Result_1.Result.fail(`Invalid client id: ${idResult.getError()}`);
+        }
         const nameResult = Name_1.Name.create(props.name);
         if (nameResult.isFailure) {
             return Result_1.Result.fail(`Invalid name: ${nameResult.getError()}`);
@@ -62,27 +116,7 @@ class Client {
         if (statusResult.isFailure) {
             return Result_1.Result.fail(`Invalid status: ${statusResult.getError()}`);
         }
-        return Result_1.Result.ok(new Client(ClientId_1.ClientId.create().getValue(), nameResult.getValue(), phoneResult.getValue(), emailResult.getValue(), birthDateResult.getValue(), documentResult.getValue(), passwordResult.getValue(), statusResult.getValue(), new Date(), new Date()));
-    }
-    static activate(client) {
-        if (client.status.asString === "active") {
-            throw new Error("Client is already active");
-        }
-        const statusResult = Status_1.Status.create("active");
-        if (statusResult.isFailure) {
-            throw new Error(`Failed to activate client: ${statusResult.getError()}`);
-        }
-        return new Client(client.id, client.name, client.phone, client.email, client.birthDate, client.document, client.password, client.status, client.createdAt, client.updatedAt);
-    }
-    static deactivate(client) {
-        if (client.status.asString === "inactive") {
-            throw new Error("Client is already inactive");
-        }
-        const statusResult = Status_1.Status.create("deactive");
-        if (statusResult.isFailure) {
-            throw new Error(`Failed to deactive client: ${statusResult.isFailure}`);
-        }
-        return new Client(client.id, client.name, client.phone, client.email, client.birthDate, client.document, client.password, client.status, client.createdAt, client.updatedAt);
+        return Result_1.Result.ok(new Client(idResult.getValue(), nameResult.getValue(), phoneResult.getValue(), emailResult.getValue(), birthDateResult.getValue(), documentResult.getValue(), passwordResult.getValue(), statusResult.getValue(), props.createdAt, props.updatedAt));
     }
 }
 exports.Client = Client;

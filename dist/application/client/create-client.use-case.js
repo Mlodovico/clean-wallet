@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateClientUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const Client_1 = require("../../domain/client/Client");
+const document_errors_1 = require("../../domain/client/errors/document.errors");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
 let CreateClientUseCase = class CreateClientUseCase {
     clientRepository;
@@ -35,6 +36,10 @@ let CreateClientUseCase = class CreateClientUseCase {
             throw new common_1.BadRequestException(clientResult.getError());
         }
         const client = clientResult.getValue();
+        const existing = await this.clientRepository.findByDocument(client.document.getValue());
+        if (existing) {
+            throw new common_1.ConflictException(document_errors_1.DocumentErrors.documentAlreadyInUse().message);
+        }
         try {
             await this.clientRepository.save(this.toPersistenceRecord(client));
         }
@@ -45,6 +50,7 @@ let CreateClientUseCase = class CreateClientUseCase {
     }
     toPersistenceRecord(client) {
         return {
+            publicId: client.id.getValue(),
             name: client.name.getValue(),
             phone: client.phone.getValue(),
             email: client.email.getValue(),

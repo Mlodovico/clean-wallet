@@ -1,10 +1,12 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
 } from "@nestjs/common";
 
 import { Client } from "../../domain/client/Client";
+import { DocumentErrors } from "../../domain/client/errors/document.errors";
 import {
   ClientPersistenceRecord,
   ClientRepositoryPort,
@@ -45,6 +47,15 @@ export class CreateClientUseCase {
     }
 
     const client = clientResult.getValue();
+    const existing = await this.clientRepository.findByDocument(
+      client.document.getValue(),
+    );
+
+    if (existing) {
+      throw new ConflictException(
+        DocumentErrors.documentAlreadyInUse().message,
+      );
+    }
 
     try {
       await this.clientRepository.save(this.toPersistenceRecord(client));
@@ -57,6 +68,7 @@ export class CreateClientUseCase {
 
   private toPersistenceRecord(client: Client): ClientPersistenceRecord {
     return {
+      publicId: client.id.getValue(),
       name: client.name.getValue(),
       phone: client.phone.getValue(),
       email: client.email.getValue(),

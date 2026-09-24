@@ -1,18 +1,32 @@
 import { validCreateClientInput } from "../../testing/fixtures/domain.fixtures";
 import { Client } from "../../domain/client/Client";
 import { CreateClientUseCase } from "../../application/client/create-client.use-case";
+import { GetClientUseCase } from "../../application/client/get-client.use-case";
+import { UpdateClientUseCase } from "../../application/client/update-client.use-case";
 import { ClientService } from "./client.service";
 
 describe("ClientService", () => {
   let service: ClientService;
   let createClientUseCase: jest.Mocked<CreateClientUseCase>;
+  let getClientUseCase: jest.Mocked<GetClientUseCase>;
+  let updateClientUseCase: jest.Mocked<UpdateClientUseCase>;
 
   beforeEach(() => {
     createClientUseCase = {
       execute: jest.fn(),
     } as unknown as jest.Mocked<CreateClientUseCase>;
+    getClientUseCase = {
+      execute: jest.fn(),
+    } as unknown as jest.Mocked<GetClientUseCase>;
+    updateClientUseCase = {
+      execute: jest.fn(),
+    } as unknown as jest.Mocked<UpdateClientUseCase>;
 
-    service = new ClientService(createClientUseCase);
+    service = new ClientService(
+      createClientUseCase,
+      getClientUseCase,
+      updateClientUseCase,
+    );
   });
 
   it("returns an empty list by default", () => {
@@ -36,16 +50,16 @@ describe("ClientService", () => {
     expect(service.findAll()).toHaveLength(1);
   });
 
-  it("finds a client by id", async () => {
+  it("finds a client by public id", async () => {
     const client = Client.create({
       ...validCreateClientInput,
       birthDate: validCreateClientInput.birthDate as Date,
     }).getValue();
 
-    createClientUseCase.execute.mockResolvedValue(client);
-    await service.create(validCreateClientInput);
+    getClientUseCase.execute.mockResolvedValue(client);
 
-    expect(service.findOne(client.id.getValue())).toBe(client);
+    await expect(service.findOne(client.id.getValue())).resolves.toBe(client);
+    expect(getClientUseCase.execute).toHaveBeenCalledWith(client.id.getValue());
   });
 
   it("updates an existing client", async () => {
@@ -53,18 +67,18 @@ describe("ClientService", () => {
       ...validCreateClientInput,
       birthDate: validCreateClientInput.birthDate as Date,
     }).getValue();
+    const updatedClient = client.update({ name: "Jane Doe" }).getValue();
 
-    createClientUseCase.execute.mockResolvedValue(client);
-    await service.create(validCreateClientInput);
+    updateClientUseCase.execute.mockResolvedValue(updatedClient);
 
-    const updated = service.update(client.id.getValue(), {} as Partial<Client>);
+    const updated = await service.update(client.id.getValue(), {
+      name: "Jane Doe",
+    });
 
-    expect(updated).toBeDefined();
-    expect(updated?.id.getValue()).toBe(client.id.getValue());
-    expect(updated?.updatedAt).toBeInstanceOf(Date);
-  });
-
-  it("returns undefined when updating a missing client", () => {
-    expect(service.update("missing-id", {})).toBeUndefined();
+    expect(updateClientUseCase.execute).toHaveBeenCalledWith({
+      id: client.id.getValue(),
+      name: "Jane Doe",
+    });
+    expect(updated).toBe(updatedClient);
   });
 });
