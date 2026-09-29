@@ -5,50 +5,59 @@ import {
 } from "@nestjs/common";
 
 import {
+  CLIENT_PUBLIC_ID,
   anotherValidDocument,
+  buildClient,
   validCreateClientInput,
 } from "../../testing/fixtures/domain.fixtures";
-import { Client } from "../../domain/client/Client";
-import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
+import {
+  mockClientRepository,
+  mockEventPublisher,
+  mockPasswordHasher,
+} from "../../testing/mocks/client-ports.mock";
 import { CreateClientUseCase } from "./create-client.use-case";
 
 describe("CreateClientUseCase", () => {
   let useCase: CreateClientUseCase;
-  let repository: jest.Mocked<ClientRepositoryPort>;
+  let repository: ReturnType<typeof mockClientRepository>;
+  let hasher: ReturnType<typeof mockPasswordHasher>;
+  let events: ReturnType<typeof mockEventPublisher>;
 
   beforeEach(() => {
-    repository = {
-      save: jest.fn().mockResolvedValue({
-        id: 1,
-        publicId: "550e8400-e29b-41d4-a716-446655440000",
-        ...validCreateClientInput,
-        birthDate: validCreateClientInput.birthDate as Date,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }),
-      update: jest.fn(),
-      findById: jest.fn(),
-      findByDocument: jest.fn().mockResolvedValue(null),
-    };
+    repository = mockClientRepository();
+    hasher = mockPasswordHasher();
+    events = mockEventPublisher();
 
-    useCase = new CreateClientUseCase(repository);
+    useCase = new CreateClientUseCase(repository, hasher, events);
   });
 
-  it("creates and persists a client with a public id", async () => {
+  it("creates a pending client, stores the hashed password and publishes client.created", async () => {
     const client = await useCase.execute(validCreateClientInput);
 
     expect(client.name.getValue()).toBe("Murilo Lodovico");
-    expect(client.id.getValue()).toBe("550e8400-e29b-41d4-a716-446655440000");
+    expect(client.id.getValue()).toBe(CLIENT_PUBLIC_ID);
+    expect(client.status.getValue()).toBe("pending");
+    expect(hasher.hash).toHaveBeenCalledWith(validCreateClientInput.password);
     expect(repository.findByDocument).toHaveBeenCalledWith(
       validCreateClientInput.document,
     );
+    expect(repository.findByEmail).toHaveBeenCalledWith(
+      validCreateClientInput.email,
+    );
     expect(repository.save).toHaveBeenCalledWith(
       expect.objectContaining({
-        publicId: "550e8400-e29b-41d4-a716-446655440000",
+        publicId: CLIENT_PUBLIC_ID,
         name: "Murilo Lodovico",
         email: "murilo@example.com",
         document: validCreateClientInput.document,
-        status: "active",
+        password: "scrypt$salt$10",
+        status: "pending",
+      }),
+    );
+    expect(events.publish).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "client.created",
+        payload: { clientId: CLIENT_PUBLIC_ID, status: "pending" },
       }),
     );
   });
@@ -77,21 +86,40 @@ describe("CreateClientUseCase", () => {
     expect(repository.save).not.toHaveBeenCalled();
   });
 
-  it("throws ConflictException when document is already in use", async () => {
-    const existing = Client.reconstitute({
-      ...validCreateClientInput,
-      id: "11111111-1111-4111-8111-111111111111",
-      document: anotherValidDocument,
-      birthDate: validCreateClientInput.birthDate as Date,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }).getValue();
+  it("rejects a weak password before hashing it", async () => {
+    await expect(
+      useCase.execute({ ...validCreateClientInput, password: "weak" }),
+    ).rejects.toBeInstanceOf(BadRequestException);
 
-    repository.findByDocument.mockResolvedValue(existing);
+    expect(hasher.hash).not.toHaveBeenCalled();
+    expect(repository.save).not.toHaveBeenCalled();
+  });
+
+  it("throws ConflictException when document is already in use", async () => {
+    repository.findByDocument.mockResolvedValue(
+      buildClient({
+        id: "11111111-1111-4111-8111-111111111111",
+        document: anotherValidDocument,
+      }),
+    );
 
     await expect(
       useCase.execute(validCreateClientInput),
     ).rejects.toBeInstanceOf(ConflictException);
+    expect(repository.save).not.toHaveBeenCalled();
+  });
+
+  it("throws ConflictException when email is already in use", async () => {
+    repository.findByEmail.mockResolvedValue(
+      buildClient({
+        id: "11111111-1111-4111-8111-111111111111",
+        document: anotherValidDocument,
+      }),
+    );
+
+    await expect(useCase.execute(validCreateClientInput)).rejects.toThrow(
+      "Client email already in use",
+    );
     expect(repository.save).not.toHaveBeenCalled();
   });
 
@@ -101,5 +129,6 @@ describe("CreateClientUseCase", () => {
     await expect(
       useCase.execute(validCreateClientInput),
     ).rejects.toBeInstanceOf(InternalServerErrorException);
+    expect(events.publish).not.toHaveBeenCalled();
   });
 });

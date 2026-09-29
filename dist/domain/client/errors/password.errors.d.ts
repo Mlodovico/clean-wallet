@@ -8,4 +8,7 @@ export declare class PasswordErrors extends Error {
     static passwordMaxLengthExceeded(maxLength: string): PasswordErrors;
     static passwordCannotContainSpaces(): PasswordErrors;
     static passwordMustMeetComplexityRequirements(): PasswordErrors;
+    static passwordHashCannotBeEmpty(): PasswordErrors;
+    static currentPasswordIsInvalid(): PasswordErrors;
+    static newPasswordMustBeDifferent(): PasswordErrors;
 }

@@ -7,10 +7,12 @@ import {
 
 import { Client } from "../../domain/client/Client";
 import { DocumentErrors } from "../../domain/client/errors/document.errors";
-import {
-  ClientPersistenceRecord,
-  ClientRepositoryPort,
-} from "../../domain/client/ports/client-repository.port";
+import { EmailErrors } from "../../domain/client/errors/email.errors";
+import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
+import { Password } from "../../domain/client/vo/Password";
+import { EventPublisherPort } from "../port/event-publisher.port";
+import { PasswordHasherPort } from "../port/password-hasher.port";
+import { toClientPersistenceRecord } from "./client-use-case.helpers";
 
 export type CreateClientInput = {
   name: string;
@@ -19,14 +21,24 @@ export type CreateClientInput = {
   birthDate: Date | string;
   document: string;
   password: string;
-  status: string;
 };
 
 @Injectable()
 export class CreateClientUseCase {
-  constructor(private readonly clientRepository: ClientRepositoryPort) {}
+  constructor(
+    private readonly clientRepository: ClientRepositoryPort,
+    private readonly passwordHasher: PasswordHasherPort,
+    private readonly eventPublisher: EventPublisherPort,
+  ) {}
 
   async execute(input: CreateClientInput): Promise<Client> {
+    const passwordResult = Password.create(input.password);
+    if (passwordResult.isFailure) {
+      throw new BadRequestException(
+        `Invalid password: ${passwordResult.getError()}`,
+      );
+    }
+
     const birthDate =
       typeof input.birthDate === "string"
         ? new Date(input.birthDate)
@@ -38,8 +50,7 @@ export class CreateClientUseCase {
       email: input.email,
       birthDate,
       document: input.document,
-      password: input.password,
-      status: input.status,
+      passwordHash: await this.passwordHasher.hash(input.password),
     });
 
     if (clientResult.isFailure) {
@@ -47,35 +58,34 @@ export class CreateClientUseCase {
     }
 
     const client = clientResult.getValue();
-    const existing = await this.clientRepository.findByDocument(
-      client.document.getValue(),
-    );
 
-    if (existing) {
+    if (
+      await this.clientRepository.findByDocument(client.document.getValue())
+    ) {
       throw new ConflictException(
         DocumentErrors.documentAlreadyInUse().message,
       );
     }
 
+    if (await this.clientRepository.findByEmail(client.email.getValue())) {
+      throw new ConflictException(EmailErrors.emailAlreadyInUse().message);
+    }
+
     try {
-      await this.clientRepository.save(this.toPersistenceRecord(client));
+      await this.clientRepository.save(toClientPersistenceRecord(client));
     } catch {
       throw new InternalServerErrorException("Failed to create client");
     }
 
-    return client;
-  }
+    await this.eventPublisher.publish({
+      type: "client.created",
+      payload: {
+        clientId: client.id.getValue(),
+        status: client.status.getValue(),
+      },
+      occurredAt: new Date(),
+    });
 
-  private toPersistenceRecord(client: Client): ClientPersistenceRecord {
-    return {
-      publicId: client.id.getValue(),
-      name: client.name.getValue(),
-      phone: client.phone.getValue(),
-      email: client.email.getValue(),
-      birthDate: client.birthDate.getValue(),
-      document: client.document.getValue(),
-      password: client.password.getValue(),
-      status: client.status.getValue(),
-    };
+    return client;
   }
 }

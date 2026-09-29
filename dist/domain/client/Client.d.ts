@@ -3,7 +3,7 @@ import { Birthdate } from "./vo/Birthdate";
 import { ClientId } from "./vo/ClientId";
 import { Email } from "./vo/Email";
 import { Name } from "./vo/Name";
-import { Password } from "./vo/Password";
+import { PasswordHash } from "./vo/PasswordHash";
 import { Phone } from "./vo/Phone";
 import { Status } from "./vo/Status";
 import { ClientDocument } from "./vo/ClientDocument";
@@ -13,14 +13,17 @@ type RawClientProps = {
     email: string;
     birthDate: Date | string;
     document: string;
-    password: string;
+    passwordHash: string;
     status: string;
 };
+export type CreateClientProps = Omit<RawClientProps, "status">;
+export type ClientProfileChanges = Partial<Omit<RawClientProps, "passwordHash" | "status">>;
 type ReconstituteClientProps = RawClientProps & {
     id: string;
     createdAt: Date;
     updatedAt: Date;
 };
+export type ClientStatusValue = "pending" | "active" | "suspended" | "inactive";
 export declare class Client {
     readonly id: ClientId;
     readonly name: Name;
@@ -28,16 +31,23 @@ export declare class Client {
     readonly email: Email;
     readonly birthDate: Birthdate;
     readonly document: ClientDocument;
-    readonly password: Password;
+    readonly passwordHash: PasswordHash;
     readonly status: Status;
     readonly createdAt: Date;
     readonly updatedAt: Date;
-    constructor(id: ClientId, name: Name, phone: Phone, email: Email, birthDate: Birthdate, document: ClientDocument, password: Password, status: Status, createdAt: Date, updatedAt: Date);
-    static create(props: RawClientProps): Result<Client>;
+    constructor(id: ClientId, name: Name, phone: Phone, email: Email, birthDate: Birthdate, document: ClientDocument, passwordHash: PasswordHash, status: Status, createdAt: Date, updatedAt: Date);
+    static create(props: CreateClientProps): Result<Client>;
     static reconstitute(props: ReconstituteClientProps): Result<Client>;
-    update(changes: Partial<RawClientProps>): Result<Client>;
-    static activate(client: Client): Client;
-    static deactivate(client: Client): Client;
+    get isActive(): boolean;
+    get isInactive(): boolean;
+    update(changes: ClientProfileChanges): Result<Client>;
+    changePassword(newPasswordHash: string): Result<Client>;
+    activate(): Result<Client>;
+    suspend(): Result<Client>;
+    deactivate(): Result<Client>;
+    toJSON(): Record<string, unknown>;
+    private transitionTo;
+    private rebuild;
     private static build;
 }
 export {};

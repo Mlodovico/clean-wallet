@@ -23,9 +23,9 @@ export class WalletEntity {
   @Column("decimal", { precision: 12, scale: 2 })
   walletLimit!: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

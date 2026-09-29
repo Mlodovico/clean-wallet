@@ -26,8 +26,23 @@ let ClientController = class ClientController {
     createNewClient(newClient) {
         return this.clientService.create(newClient);
     }
+    findBy(criteria) {
+        return this.clientService.findBy(criteria);
+    }
     updateClient(id, updateData) {
         return this.clientService.update(id, updateData);
+    }
+    activate(id) {
+        return this.clientService.changeStatus(id, "activate");
+    }
+    suspend(id) {
+        return this.clientService.changeStatus(id, "suspend");
+    }
+    deactivate(id) {
+        return this.clientService.changeStatus(id, "deactivate");
+    }
+    changePassword(id, body) {
+        return this.clientService.changePassword(id, body.currentPassword, body.newPassword);
     }
     findById(id) {
         return this.clientService.findOne(id);
@@ -48,6 +63,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClientController.prototype, "createNewClient", null);
 __decorate([
+    (0, common_1.Get)("lookup"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ClientController.prototype, "findBy", null);
+__decorate([
     (0, common_1.Put)(":id"),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
@@ -55,6 +77,36 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ClientController.prototype, "updateClient", null);
+__decorate([
+    (0, common_1.Patch)(":id/activate"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ClientController.prototype, "activate", null);
+__decorate([
+    (0, common_1.Patch)(":id/suspend"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ClientController.prototype, "suspend", null);
+__decorate([
+    (0, common_1.Patch)(":id/deactivate"),
+    __param(0, (0, common_1.Param)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ClientController.prototype, "deactivate", null);
+__decorate([
+    (0, common_1.Patch)(":id/password"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    __param(0, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], ClientController.prototype, "changePassword", null);
 __decorate([
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Param)("id")),

@@ -65,6 +65,12 @@ export class ClientRepository implements ClientRepositoryPort {
     return entity ? this.toDomain(entity) : null;
   }
 
+  async findByEmail(email: string): Promise<Client | null> {
+    const entity = await withRetry(() => this.repository.findOneBy({ email }));
+
+    return entity ? this.toDomain(entity) : null;
+  }
+
   private toSavedRecord(saved: ClientEntity): SavedClientRecord {
     return {
       id: saved.id,
@@ -89,7 +95,7 @@ export class ClientRepository implements ClientRepositoryPort {
       phone: entity.phone,
       birthDate: entity.birthDate,
       document: entity.document,
-      password: entity.password,
+      passwordHash: entity.password,
       status: entity.status,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,

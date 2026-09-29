@@ -26,7 +26,7 @@ exports.DatabaseModule = DatabaseModule = __decorate([
                     username: configService.get("POSTGRES_USER"),
                     password: configService.get("POSTGRES_PASSWORD"),
                     database: configService.get("POSTGRES_DB"),
-                    entities: [__dirname + "/../**/*.entity.{js,ts}"],
+                    autoLoadEntities: true,
                     synchronize: true,
                     retryAttempts: Number(configService.get("DB_RETRY_ATTEMPTS") ?? 10),
                     retryDelay: Number(configService.get("DB_RETRY_DELAY_MS") ?? 3000),

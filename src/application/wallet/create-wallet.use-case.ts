@@ -1,9 +1,13 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from "@nestjs/common";
 
+import { StatusErrors } from "../../domain/client/errors/status.errors";
+import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
 import { Wallet } from "../../domain/wallet/Wallet";
 import {
   WalletPersistenceRecord,
@@ -19,7 +23,10 @@ export type CreateWalletInput = {
 
 @Injectable()
 export class CreateWalletUseCase {
-  constructor(private readonly walletRepository: WalletRepositoryPort) {}
+  constructor(
+    private readonly walletRepository: WalletRepositoryPort,
+    private readonly clientRepository: ClientRepositoryPort,
+  ) {}
 
   async execute(input: CreateWalletInput): Promise<Wallet> {
     const walletResult = Wallet.create(input);
@@ -29,6 +36,17 @@ export class CreateWalletUseCase {
     }
 
     const wallet = walletResult.getValue();
+
+    const client = await this.clientRepository.findById(
+      wallet.clientId.getValue(),
+    );
+    if (!client) {
+      throw new NotFoundException("Client not found");
+    }
+
+    if (!client.isActive) {
+      throw new ConflictException(StatusErrors.clientIsNotActive().message);
+    }
 
     try {
       await this.walletRepository.save(this.toPersistenceRecord(wallet));

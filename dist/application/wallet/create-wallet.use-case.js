@@ -11,12 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateWalletUseCase = void 0;
 const common_1 = require("@nestjs/common");
+const status_errors_1 = require("../../domain/client/errors/status.errors");
+const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
 const Wallet_1 = require("../../domain/wallet/Wallet");
 const wallet_repository_port_1 = require("../../domain/wallet/ports/wallet-repository.port");
 let CreateWalletUseCase = class CreateWalletUseCase {
     walletRepository;
-    constructor(walletRepository) {
+    clientRepository;
+    constructor(walletRepository, clientRepository) {
         this.walletRepository = walletRepository;
+        this.clientRepository = clientRepository;
     }
     async execute(input) {
         const walletResult = Wallet_1.Wallet.create(input);
@@ -24,6 +28,13 @@ let CreateWalletUseCase = class CreateWalletUseCase {
             throw new common_1.BadRequestException(walletResult.getError());
         }
         const wallet = walletResult.getValue();
+        const client = await this.clientRepository.findById(wallet.clientId.getValue());
+        if (!client) {
+            throw new common_1.NotFoundException("Client not found");
+        }
+        if (!client.isActive) {
+            throw new common_1.ConflictException(status_errors_1.StatusErrors.clientIsNotActive().message);
+        }
         try {
             await this.walletRepository.save(this.toPersistenceRecord(wallet));
         }
@@ -45,6 +56,7 @@ let CreateWalletUseCase = class CreateWalletUseCase {
 exports.CreateWalletUseCase = CreateWalletUseCase;
 exports.CreateWalletUseCase = CreateWalletUseCase = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [wallet_repository_port_1.WalletRepositoryPort])
+    __metadata("design:paramtypes", [wallet_repository_port_1.WalletRepositoryPort,
+        client_repository_port_1.ClientRepositoryPort])
 ], CreateWalletUseCase);
 //# sourceMappingURL=create-wallet.use-case.js.map

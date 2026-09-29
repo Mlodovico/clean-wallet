@@ -12,55 +12,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateClientUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const document_errors_1 = require("../../domain/client/errors/document.errors");
+const email_errors_1 = require("../../domain/client/errors/email.errors");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
-const ClientId_1 = require("../../domain/client/vo/ClientId");
+const client_use_case_helpers_1 = require("./client-use-case.helpers");
 let UpdateClientUseCase = class UpdateClientUseCase {
     clientRepository;
     constructor(clientRepository) {
         this.clientRepository = clientRepository;
     }
     async execute(input) {
-        const idResult = ClientId_1.ClientId.create(input.id);
-        if (idResult.isFailure) {
-            throw new common_1.BadRequestException(idResult.getError());
-        }
-        const publicId = idResult.getValue().getValue();
-        const client = await this.clientRepository.findById(publicId);
-        if (!client) {
-            throw new common_1.NotFoundException("Client not found");
-        }
-        const { id: _id, ...changes } = input;
-        const clientResult = client.update(changes);
+        const client = await (0, client_use_case_helpers_1.findClientOrFail)(this.clientRepository, input.id);
+        const clientResult = client.update(input);
         if (clientResult.isFailure) {
             throw new common_1.BadRequestException(clientResult.getError());
         }
         const updated = clientResult.getValue();
-        const documentChanged = updated.document.getValue() !== client.document.getValue();
-        if (documentChanged) {
+        if (updated.document.getValue() !== client.document.getValue()) {
             const existing = await this.clientRepository.findByDocument(updated.document.getValue());
             if (existing) {
                 throw new common_1.ConflictException(document_errors_1.DocumentErrors.documentAlreadyInUse().message);
             }
         }
+        if (updated.email.getValue() !== client.email.getValue()) {
+            const existing = await this.clientRepository.findByEmail(updated.email.getValue());
+            if (existing) {
+                throw new common_1.ConflictException(email_errors_1.EmailErrors.emailAlreadyInUse().message);
+            }
+        }
         try {
-            await this.clientRepository.update(publicId, this.toPersistenceRecord(updated));
+            await this.clientRepository.update(updated.id.getValue(), (0, client_use_case_helpers_1.toClientPersistenceRecord)(updated));
         }
         catch {
             throw new common_1.InternalServerErrorException("Failed to update client");
         }
         return updated;
-    }
-    toPersistenceRecord(client) {
-        return {
-            publicId: client.id.getValue(),
-            name: client.name.getValue(),
-            phone: client.phone.getValue(),
-            email: client.email.getValue(),
-            birthDate: client.birthDate.getValue(),
-            document: client.document.getValue(),
-            password: client.password.getValue(),
-            status: client.status.getValue(),
-        };
     }
 };
 exports.UpdateClientUseCase = UpdateClientUseCase;

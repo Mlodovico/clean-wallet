@@ -1,3 +1,4 @@
+import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
 import { Wallet } from "../../domain/wallet/Wallet";
 import { WalletRepositoryPort } from "../../domain/wallet/ports/wallet-repository.port";
 export type CreateWalletInput = {
@@ -8,7 +9,8 @@ export type CreateWalletInput = {
 };
 export declare class CreateWalletUseCase {
     private readonly walletRepository;
-    constructor(walletRepository: WalletRepositoryPort);
+    private readonly clientRepository;
+    constructor(walletRepository: WalletRepositoryPort, clientRepository: ClientRepositoryPort);
     execute(input: CreateWalletInput): Promise<Wallet>;
     private toPersistenceRecord;
 }

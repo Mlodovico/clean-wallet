@@ -9,12 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const change_client_password_use_case_1 = require("../../application/client/change-client-password.use-case");
+const change_client_status_use_case_1 = require("../../application/client/change-client-status.use-case");
 const create_client_use_case_1 = require("../../application/client/create-client.use-case");
+const find_client_use_case_1 = require("../../application/client/find-client.use-case");
 const get_client_use_case_1 = require("../../application/client/get-client.use-case");
 const update_client_use_case_1 = require("../../application/client/update-client.use-case");
+const event_publisher_port_1 = require("../../application/port/event-publisher.port");
+const password_hasher_port_1 = require("../../application/port/password-hasher.port");
 const client_entity_1 = require("../../domain/client/client.entity");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
+const LoggerEventPublisher_1 = require("../../infrastructure/events/LoggerEventPublisher");
 const ClientRepository_1 = require("../../infrastructure/repositories/ClientRepository");
+const ScryptPasswordHasher_1 = require("../../infrastructure/security/ScryptPasswordHasher");
 const client_controller_1 = require("./client.controller");
 const client_service_1 = require("./client.service");
 let ClientModule = class ClientModule {
@@ -29,9 +36,20 @@ exports.ClientModule = ClientModule = __decorate([
             create_client_use_case_1.CreateClientUseCase,
             get_client_use_case_1.GetClientUseCase,
             update_client_use_case_1.UpdateClientUseCase,
+            change_client_status_use_case_1.ChangeClientStatusUseCase,
+            change_client_password_use_case_1.ChangeClientPasswordUseCase,
+            find_client_use_case_1.FindClientUseCase,
             {
                 provide: client_repository_port_1.ClientRepositoryPort,
                 useClass: ClientRepository_1.ClientRepository,
+            },
+            {
+                provide: password_hasher_port_1.PasswordHasherPort,
+                useClass: ScryptPasswordHasher_1.ScryptPasswordHasher,
+            },
+            {
+                provide: event_publisher_port_1.EventPublisherPort,
+                useClass: LoggerEventPublisher_1.LoggerEventPublisher,
             },
         ],
         exports: [
@@ -39,6 +57,7 @@ exports.ClientModule = ClientModule = __decorate([
             create_client_use_case_1.CreateClientUseCase,
             get_client_use_case_1.GetClientUseCase,
             update_client_use_case_1.UpdateClientUseCase,
+            client_repository_port_1.ClientRepositoryPort,
         ],
     })
 ], ClientModule);

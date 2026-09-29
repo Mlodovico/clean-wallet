@@ -38,7 +38,7 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Client.prototype, "email", void 0);
 __decorate([
@@ -46,7 +46,7 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: "timestamptz" }),
     __metadata("design:type", Date)
 ], Client.prototype, "birthDate", void 0);
 __decorate([
@@ -62,11 +62,11 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)(),
+    (0, typeorm_1.CreateDateColumn)({ type: "timestamptz" }),
     __metadata("design:type", Date)
 ], Client.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.UpdateDateColumn)(),
+    (0, typeorm_1.UpdateDateColumn)({ type: "timestamptz" }),
     __metadata("design:type", Date)
 ], Client.prototype, "updatedAt", void 0);
 exports.Client = Client = __decorate([

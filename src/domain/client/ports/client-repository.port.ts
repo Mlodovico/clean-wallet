@@ -25,4 +25,5 @@ export abstract class ClientRepositoryPort {
   ): Promise<SavedClientRecord>;
   abstract findById(publicId: string): Promise<Client | null>;
   abstract findByDocument(document: string): Promise<Client | null>;
+  abstract findByEmail(email: string): Promise<Client | null>;
 }

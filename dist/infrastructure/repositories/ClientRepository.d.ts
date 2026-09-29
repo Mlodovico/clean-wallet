@@ -9,6 +9,7 @@ export declare class ClientRepository implements ClientRepositoryPort {
     update(publicId: string, record: ClientPersistenceRecord): Promise<SavedClientRecord>;
     findById(publicId: string): Promise<Client | null>;
     findByDocument(document: string): Promise<Client | null>;
+    findByEmail(email: string): Promise<Client | null>;
     private toSavedRecord;
     private toDomain;
 }

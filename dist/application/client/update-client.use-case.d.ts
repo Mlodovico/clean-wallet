@@ -7,12 +7,9 @@ export type UpdateClientInput = {
     email?: string;
     birthDate?: Date | string;
     document?: string;
-    password?: string;
-    status?: string;
 };
 export declare class UpdateClientUseCase {
     private readonly clientRepository;
     constructor(clientRepository: ClientRepositoryPort);
     execute(input: UpdateClientInput): Promise<Client>;
-    private toPersistenceRecord;
 }

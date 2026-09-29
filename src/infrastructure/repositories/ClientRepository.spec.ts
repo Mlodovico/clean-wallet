@@ -92,6 +92,24 @@ describe("ClientRepository", () => {
     ).resolves.toBeNull();
   });
 
+  it("finds a client by email and maps the stored password to the hash", async () => {
+    typeOrmRepository.findOneBy.mockResolvedValue(savedEntity);
+
+    const result = await repository.findByEmail(savedEntity.email);
+
+    expect(typeOrmRepository.findOneBy).toHaveBeenCalledWith({
+      email: savedEntity.email,
+    });
+    expect(result?.email.getValue()).toBe(savedEntity.email);
+    expect(result?.passwordHash.getValue()).toBe(savedEntity.password);
+  });
+
+  it("returns null when no client matches the email", async () => {
+    typeOrmRepository.findOneBy.mockResolvedValue(null);
+
+    await expect(repository.findByEmail(savedEntity.email)).resolves.toBeNull();
+  });
+
   it("updates an existing client found by public id", async () => {
     const existing = { ...savedEntity };
     const updatedEntity = {

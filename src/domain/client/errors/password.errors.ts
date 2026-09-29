@@ -40,4 +40,18 @@ export class PasswordErrors extends Error {
   static passwordMustMeetComplexityRequirements(): PasswordErrors {
     return new PasswordErrors("Password must meet complexity requirements");
   }
+
+  static passwordHashCannotBeEmpty(): PasswordErrors {
+    return new PasswordErrors("Password hash cannot be empty");
+  }
+
+  static currentPasswordIsInvalid(): PasswordErrors {
+    return new PasswordErrors("Current password is invalid");
+  }
+
+  static newPasswordMustBeDifferent(): PasswordErrors {
+    return new PasswordErrors(
+      "New password must be different from the current password",
+    );
+  }
 }

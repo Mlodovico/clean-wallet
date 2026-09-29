@@ -13,13 +13,26 @@ exports.CreateClientUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const Client_1 = require("../../domain/client/Client");
 const document_errors_1 = require("../../domain/client/errors/document.errors");
+const email_errors_1 = require("../../domain/client/errors/email.errors");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
+const Password_1 = require("../../domain/client/vo/Password");
+const event_publisher_port_1 = require("../port/event-publisher.port");
+const password_hasher_port_1 = require("../port/password-hasher.port");
+const client_use_case_helpers_1 = require("./client-use-case.helpers");
 let CreateClientUseCase = class CreateClientUseCase {
     clientRepository;
-    constructor(clientRepository) {
+    passwordHasher;
+    eventPublisher;
+    constructor(clientRepository, passwordHasher, eventPublisher) {
         this.clientRepository = clientRepository;
+        this.passwordHasher = passwordHasher;
+        this.eventPublisher = eventPublisher;
     }
     async execute(input) {
+        const passwordResult = Password_1.Password.create(input.password);
+        if (passwordResult.isFailure) {
+            throw new common_1.BadRequestException(`Invalid password: ${passwordResult.getError()}`);
+        }
         const birthDate = typeof input.birthDate === "string"
             ? new Date(input.birthDate)
             : input.birthDate;
@@ -29,41 +42,40 @@ let CreateClientUseCase = class CreateClientUseCase {
             email: input.email,
             birthDate,
             document: input.document,
-            password: input.password,
-            status: input.status,
+            passwordHash: await this.passwordHasher.hash(input.password),
         });
         if (clientResult.isFailure) {
             throw new common_1.BadRequestException(clientResult.getError());
         }
         const client = clientResult.getValue();
-        const existing = await this.clientRepository.findByDocument(client.document.getValue());
-        if (existing) {
+        if (await this.clientRepository.findByDocument(client.document.getValue())) {
             throw new common_1.ConflictException(document_errors_1.DocumentErrors.documentAlreadyInUse().message);
         }
+        if (await this.clientRepository.findByEmail(client.email.getValue())) {
+            throw new common_1.ConflictException(email_errors_1.EmailErrors.emailAlreadyInUse().message);
+        }
         try {
-            await this.clientRepository.save(this.toPersistenceRecord(client));
+            await this.clientRepository.save((0, client_use_case_helpers_1.toClientPersistenceRecord)(client));
         }
         catch {
             throw new common_1.InternalServerErrorException("Failed to create client");
         }
+        await this.eventPublisher.publish({
+            type: "client.created",
+            payload: {
+                clientId: client.id.getValue(),
+                status: client.status.getValue(),
+            },
+            occurredAt: new Date(),
+        });
         return client;
-    }
-    toPersistenceRecord(client) {
-        return {
-            publicId: client.id.getValue(),
-            name: client.name.getValue(),
-            phone: client.phone.getValue(),
-            email: client.email.getValue(),
-            birthDate: client.birthDate.getValue(),
-            document: client.document.getValue(),
-            password: client.password.getValue(),
-            status: client.status.getValue(),
-        };
     }
 };
 exports.CreateClientUseCase = CreateClientUseCase;
 exports.CreateClientUseCase = CreateClientUseCase = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [client_repository_port_1.ClientRepositoryPort])
+    __metadata("design:paramtypes", [client_repository_port_1.ClientRepositoryPort,
+        password_hasher_port_1.PasswordHasherPort,
+        event_publisher_port_1.EventPublisherPort])
 ], CreateClientUseCase);
 //# sourceMappingURL=create-client.use-case.js.map

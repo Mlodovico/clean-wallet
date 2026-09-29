@@ -12,22 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetClientUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const client_repository_port_1 = require("../../domain/client/ports/client-repository.port");
-const ClientId_1 = require("../../domain/client/vo/ClientId");
+const client_use_case_helpers_1 = require("./client-use-case.helpers");
 let GetClientUseCase = class GetClientUseCase {
     clientRepository;
     constructor(clientRepository) {
         this.clientRepository = clientRepository;
     }
-    async execute(id) {
-        const idResult = ClientId_1.ClientId.create(id);
-        if (idResult.isFailure) {
-            throw new common_1.BadRequestException(idResult.getError());
-        }
-        const client = await this.clientRepository.findById(idResult.getValue().getValue());
-        if (!client) {
-            throw new common_1.NotFoundException("Client not found");
-        }
-        return client;
+    execute(id) {
+        return (0, client_use_case_helpers_1.findClientOrFail)(this.clientRepository, id);
     }
 };
 exports.GetClientUseCase = GetClientUseCase;

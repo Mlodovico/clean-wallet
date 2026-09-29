@@ -29,6 +29,15 @@ class PasswordErrors extends Error {
     static passwordMustMeetComplexityRequirements() {
         return new PasswordErrors("Password must meet complexity requirements");
     }
+    static passwordHashCannotBeEmpty() {
+        return new PasswordErrors("Password hash cannot be empty");
+    }
+    static currentPasswordIsInvalid() {
+        return new PasswordErrors("Current password is invalid");
+    }
+    static newPasswordMustBeDifferent() {
+        return new PasswordErrors("New password must be different from the current password");
+    }
 }
 exports.PasswordErrors = PasswordErrors;
 //# sourceMappingURL=password.errors.js.map

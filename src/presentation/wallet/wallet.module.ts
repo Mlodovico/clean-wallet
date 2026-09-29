@@ -5,11 +5,12 @@ import { CreateWalletUseCase } from "../../application/wallet/create-wallet.use-
 import { WalletEntity } from "../../domain/wallet/wallet.entity";
 import { WalletRepositoryPort } from "../../domain/wallet/ports/wallet-repository.port";
 import { WalletRepository } from "../../infrastructure/repositories/WalletRepository";
+import { ClientModule } from "../client/client.module";
 import { WalletController } from "./wallet.controller";
 import { WalletService } from "./wallet.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([WalletEntity])],
+  imports: [TypeOrmModule.forFeature([WalletEntity]), ClientModule],
   controllers: [WalletController],
   providers: [
     WalletService,

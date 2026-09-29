@@ -29,9 +29,9 @@ export class BalanceEntity {
   @Column()
   description!: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

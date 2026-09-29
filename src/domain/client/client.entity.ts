@@ -17,13 +17,13 @@ export class Client {
   @Column()
   name!: string;
 
-  @Column()
+  @Column({ unique: true })
   email!: string;
 
   @Column()
   phone!: string;
 
-  @Column()
+  @Column({ type: "timestamptz" })
   birthDate!: Date;
 
   @Column({ unique: true })
@@ -35,9 +35,9 @@ export class Client {
   @Column()
   status!: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

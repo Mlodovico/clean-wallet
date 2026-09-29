@@ -14,8 +14,9 @@ if [ ! -f ".env" ]; then
   exit 1
 fi
 
-echo "Starting PostgreSQL..."
-docker compose up -d --wait postgres
+echo "Starting PostgreSQL and OpenTelemetry Collector..."
+docker compose -f docker-compose.yml -f docker-compose.observability.yml \
+  up -d --wait postgres otel-collector
 
 echo "Starting application in watch mode..."
 exec pnpm run start:dev

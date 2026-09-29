@@ -42,11 +42,11 @@ __decorate([
     __metadata("design:type", Number)
 ], WalletEntity.prototype, "walletLimit", void 0);
 __decorate([
-    (0, typeorm_1.CreateDateColumn)(),
+    (0, typeorm_1.CreateDateColumn)({ type: "timestamptz" }),
     __metadata("design:type", Date)
 ], WalletEntity.prototype, "createdAt", void 0);
 __decorate([
-    (0, typeorm_1.UpdateDateColumn)(),
+    (0, typeorm_1.UpdateDateColumn)({ type: "timestamptz" }),
     __metadata("design:type", Date)
 ], WalletEntity.prototype, "updatedAt", void 0);
 exports.WalletEntity = WalletEntity = __decorate([

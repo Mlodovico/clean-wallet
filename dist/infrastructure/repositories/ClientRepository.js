@@ -51,6 +51,10 @@ let ClientRepository = class ClientRepository {
         const entity = await (0, retry_1.withRetry)(() => this.repository.findOneBy({ document }));
         return entity ? this.toDomain(entity) : null;
     }
+    async findByEmail(email) {
+        const entity = await (0, retry_1.withRetry)(() => this.repository.findOneBy({ email }));
+        return entity ? this.toDomain(entity) : null;
+    }
     toSavedRecord(saved) {
         return {
             id: saved.id,
@@ -74,7 +78,7 @@ let ClientRepository = class ClientRepository {
             phone: entity.phone,
             birthDate: entity.birthDate,
             document: entity.document,
-            password: entity.password,
+            passwordHash: entity.password,
             status: entity.status,
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,

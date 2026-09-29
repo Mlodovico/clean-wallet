@@ -1,5 +1,7 @@
 import { Client } from "../../domain/client/Client";
 import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
+import { EventPublisherPort } from "../port/event-publisher.port";
+import { PasswordHasherPort } from "../port/password-hasher.port";
 export type CreateClientInput = {
     name: string;
     phone: string;
@@ -7,11 +9,11 @@ export type CreateClientInput = {
     birthDate: Date | string;
     document: string;
     password: string;
-    status: string;
 };
 export declare class CreateClientUseCase {
     private readonly clientRepository;
-    constructor(clientRepository: ClientRepositoryPort);
+    private readonly passwordHasher;
+    private readonly eventPublisher;
+    constructor(clientRepository: ClientRepositoryPort, passwordHasher: PasswordHasherPort, eventPublisher: EventPublisherPort);
     execute(input: CreateClientInput): Promise<Client>;
-    private toPersistenceRecord;
 }

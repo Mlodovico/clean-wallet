@@ -13,6 +13,7 @@ const create_wallet_use_case_1 = require("../../application/wallet/create-wallet
 const wallet_entity_1 = require("../../domain/wallet/wallet.entity");
 const wallet_repository_port_1 = require("../../domain/wallet/ports/wallet-repository.port");
 const WalletRepository_1 = require("../../infrastructure/repositories/WalletRepository");
+const client_module_1 = require("../client/client.module");
 const wallet_controller_1 = require("./wallet.controller");
 const wallet_service_1 = require("./wallet.service");
 let WalletModule = class WalletModule {
@@ -20,7 +21,7 @@ let WalletModule = class WalletModule {
 exports.WalletModule = WalletModule;
 exports.WalletModule = WalletModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([wallet_entity_1.WalletEntity])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([wallet_entity_1.WalletEntity]), client_module_1.ClientModule],
         controllers: [wallet_controller_1.WalletController],
         providers: [
             wallet_service_1.WalletService,
