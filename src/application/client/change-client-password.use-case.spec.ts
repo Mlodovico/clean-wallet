@@ -13,6 +13,7 @@ import {
   mockClientRepository,
   mockEventPublisher,
   mockPasswordHasher,
+  mockUnitOfWork,
 } from "../../testing/mocks/client-ports.mock";
 import { ChangeClientPasswordUseCase } from "./change-client-password.use-case";
 
@@ -27,14 +28,21 @@ describe("ChangeClientPasswordUseCase", () => {
   let repository: ReturnType<typeof mockClientRepository>;
   let hasher: ReturnType<typeof mockPasswordHasher>;
   let events: ReturnType<typeof mockEventPublisher>;
+  let unitOfWork: ReturnType<typeof mockUnitOfWork>;
 
   beforeEach(() => {
     repository = mockClientRepository();
     repository.findById.mockResolvedValue(buildClient());
     hasher = mockPasswordHasher();
     events = mockEventPublisher();
+    unitOfWork = mockUnitOfWork();
 
-    useCase = new ChangeClientPasswordUseCase(repository, hasher, events);
+    useCase = new ChangeClientPasswordUseCase(
+      repository,
+      hasher,
+      events,
+      unitOfWork,
+    );
   });
 
   it("verifies the current password, stores the new hash and publishes the event", async () => {

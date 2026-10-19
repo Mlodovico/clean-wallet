@@ -1,4 +1,4 @@
-import { Result } from "../../../shared/utils/Result";
+import { Result } from "src/shared/utils/Result";
 import { WalletLimitErrors } from "../errors/walletLimit.errors";
 export declare class WalletLimit {
     private readonly value;

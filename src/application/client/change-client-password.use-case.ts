@@ -10,6 +10,7 @@ import { ClientRepositoryPort } from "../../domain/client/ports/client-repositor
 import { Password } from "../../domain/client/vo/Password";
 import { EventPublisherPort } from "../port/event-publisher.port";
 import { PasswordHasherPort } from "../port/password-hasher.port";
+import { UnitOfWorkPort } from "../port/unit-of-work.port";
 import {
   findClientOrFail,
   toClientPersistenceRecord,
@@ -27,6 +28,7 @@ export class ChangeClientPasswordUseCase {
     private readonly clientRepository: ClientRepositoryPort,
     private readonly passwordHasher: PasswordHasherPort,
     private readonly eventPublisher: EventPublisherPort,
+    private readonly unitOfWork: UnitOfWorkPort,
   ) {}
 
   async execute(input: ChangeClientPasswordInput): Promise<void> {
@@ -65,18 +67,19 @@ export class ChangeClientPasswordUseCase {
     const updated = result.getValue();
 
     try {
-      await this.clientRepository.update(
-        updated.id.getValue(),
-        toClientPersistenceRecord(updated),
-      );
+      await this.unitOfWork.run(async () => {
+        await this.clientRepository.update(
+          updated.id.getValue(),
+          toClientPersistenceRecord(updated),
+        );
+        await this.eventPublisher.publish({
+          type: "client.password_changed",
+          payload: { clientId: updated.id.getValue() },
+          occurredAt: new Date(),
+        });
+      });
     } catch {
       throw new InternalServerErrorException("Failed to change password");
     }
-
-    await this.eventPublisher.publish({
-      type: "client.password_changed",
-      payload: { clientId: updated.id.getValue() },
-      occurredAt: new Date(),
-    });
   }
 }

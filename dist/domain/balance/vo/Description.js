@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Description = void 0;
 const description_errors_1 = require("../errors/description.errors");
-const Result_1 = require("../../../shared/utils/Result");
+const Result_1 = require("src/shared/utils/Result");
 class Description {
     value;
     constructor(value) {

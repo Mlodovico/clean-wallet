@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientId = void 0;
-const Result_1 = require("../../../shared/utils/Result");
+const Result_1 = require("src/shared/utils/Result");
 const uuid_1 = require("uuid");
 const clientid_errors_1 = require("../errors/clientid.errors");
 class ClientId {

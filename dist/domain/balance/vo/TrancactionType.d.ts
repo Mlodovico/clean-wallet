@@ -1,5 +1,5 @@
 import { TransactionTypeErrors } from "../errors/transactionType.errors";
-import { Result } from "../../../shared/utils/Result";
+import { Result } from "src/shared/utils/Result";
 export declare class TransactionType {
     private readonly value;
     private constructor();

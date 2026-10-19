@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Amount = void 0;
-const Result_1 = require("../../../shared/utils/Result");
+const Result_1 = require("src/shared/utils/Result");
 const amount_errors_1 = require("../errors/amount.errors");
 class Amount {
     value;

@@ -1,5 +1,5 @@
 import { DescriptionErrors } from "../errors/description.errors";
-import { Result } from "../../../shared/utils/Result";
+import { Result } from "src/shared/utils/Result";
 export declare class Description {
     private readonly value;
     private constructor();

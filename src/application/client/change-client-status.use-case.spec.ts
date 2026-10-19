@@ -11,6 +11,7 @@ import {
 import {
   mockClientRepository,
   mockEventPublisher,
+  mockUnitOfWork,
 } from "../../testing/mocks/client-ports.mock";
 import { ChangeClientStatusUseCase } from "./change-client-status.use-case";
 
@@ -18,11 +19,13 @@ describe("ChangeClientStatusUseCase", () => {
   let useCase: ChangeClientStatusUseCase;
   let repository: ReturnType<typeof mockClientRepository>;
   let events: ReturnType<typeof mockEventPublisher>;
+  let unitOfWork: ReturnType<typeof mockUnitOfWork>;
 
   beforeEach(() => {
     repository = mockClientRepository();
     events = mockEventPublisher();
-    useCase = new ChangeClientStatusUseCase(repository, events);
+    unitOfWork = mockUnitOfWork();
+    useCase = new ChangeClientStatusUseCase(repository, events, unitOfWork);
   });
 
   it.each([

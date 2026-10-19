@@ -19,14 +19,17 @@ const Password_1 = require("../../domain/client/vo/Password");
 const event_publisher_port_1 = require("../port/event-publisher.port");
 const password_hasher_port_1 = require("../port/password-hasher.port");
 const client_use_case_helpers_1 = require("./client-use-case.helpers");
+const unit_of_work_port_1 = require("../port/unit-of-work.port");
 let CreateClientUseCase = class CreateClientUseCase {
     clientRepository;
     passwordHasher;
     eventPublisher;
-    constructor(clientRepository, passwordHasher, eventPublisher) {
+    unitOfWork;
+    constructor(clientRepository, passwordHasher, eventPublisher, unitOfWork) {
         this.clientRepository = clientRepository;
         this.passwordHasher = passwordHasher;
         this.eventPublisher = eventPublisher;
+        this.unitOfWork = unitOfWork;
     }
     async execute(input) {
         const passwordResult = Password_1.Password.create(input.password);
@@ -55,19 +58,21 @@ let CreateClientUseCase = class CreateClientUseCase {
             throw new common_1.ConflictException(email_errors_1.EmailErrors.emailAlreadyInUse().message);
         }
         try {
-            await this.clientRepository.save((0, client_use_case_helpers_1.toClientPersistenceRecord)(client));
+            await this.unitOfWork.run(async () => {
+                await this.clientRepository.save((0, client_use_case_helpers_1.toClientPersistenceRecord)(client));
+                await this.eventPublisher.publish({
+                    type: "client.created",
+                    payload: {
+                        clientId: client.id.getValue(),
+                        status: client.status.getValue(),
+                    },
+                    occurredAt: new Date(),
+                });
+            });
         }
         catch {
             throw new common_1.InternalServerErrorException("Failed to create client");
         }
-        await this.eventPublisher.publish({
-            type: "client.created",
-            payload: {
-                clientId: client.id.getValue(),
-                status: client.status.getValue(),
-            },
-            occurredAt: new Date(),
-        });
         return client;
     }
 };
@@ -76,6 +81,7 @@ exports.CreateClientUseCase = CreateClientUseCase = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [client_repository_port_1.ClientRepositoryPort,
         password_hasher_port_1.PasswordHasherPort,
-        event_publisher_port_1.EventPublisherPort])
+        event_publisher_port_1.EventPublisherPort,
+        unit_of_work_port_1.UnitOfWorkPort])
 ], CreateClientUseCase);
 //# sourceMappingURL=create-client.use-case.js.map

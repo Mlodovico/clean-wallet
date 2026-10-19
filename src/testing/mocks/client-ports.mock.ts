@@ -1,5 +1,6 @@
 import { EventPublisherPort } from "../../application/port/event-publisher.port";
 import { PasswordHasherPort } from "../../application/port/password-hasher.port";
+import { UnitOfWorkPort } from "../../application/port/unit-of-work.port";
 import { ClientRepositoryPort } from "../../domain/client/ports/client-repository.port";
 
 export const mockClientRepository = (): jest.Mocked<ClientRepositoryPort> => ({
@@ -20,3 +21,8 @@ export const mockPasswordHasher = (): jest.Mocked<PasswordHasherPort> => ({
 export const mockEventPublisher = (): jest.Mocked<EventPublisherPort> => ({
   publish: jest.fn().mockResolvedValue(undefined),
 });
+
+export const mockUnitOfWork = (): jest.Mocked<UnitOfWorkPort> =>
+  ({
+    run: jest.fn((work: () => Promise<unknown>) => work()),
+  }) as unknown as jest.Mocked<UnitOfWorkPort>;

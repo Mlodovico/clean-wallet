@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Email = void 0;
-const Result_1 = require("../../../shared/utils/Result");
+const Result_1 = require("src/shared/utils/Result");
 class Email {
     value;
     constructor(value) {

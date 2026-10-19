@@ -1,4 +1,4 @@
-import { Result } from "../../../shared/utils/Result";
+import { Result } from "src/shared/utils/Result";
 import { AmountErrors } from "../errors/amount.errors";
 export declare class Amount {
     private readonly value;

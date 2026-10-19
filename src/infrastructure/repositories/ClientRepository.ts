@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { withRetry } from "../../shared/resilience/retry";
 import { Client } from "../../domain/client/Client";
 import { Client as ClientEntity } from "../../domain/client/client.entity";
 import {
@@ -10,6 +9,8 @@ import {
   ClientRepositoryPort,
   SavedClientRecord,
 } from "../../domain/client/ports/client-repository.port";
+import { withRetry } from "../../shared/resilience/retry";
+import { transactionContext } from "../database/transaction-context";
 
 @Injectable()
 export class ClientRepository implements ClientRepositoryPort {
@@ -19,7 +20,7 @@ export class ClientRepository implements ClientRepositoryPort {
   ) {}
 
   async save(record: ClientPersistenceRecord): Promise<SavedClientRecord> {
-    const saved = await withRetry(() => this.repository.save(record));
+    const saved = await this.execute(() => this.repo.save(record));
 
     return this.toSavedRecord(saved);
   }
@@ -28,8 +29,8 @@ export class ClientRepository implements ClientRepositoryPort {
     publicId: string,
     record: ClientPersistenceRecord,
   ): Promise<SavedClientRecord> {
-    const existing = await withRetry(() =>
-      this.repository.findOneBy({ publicId }),
+    const existing = await this.execute(() =>
+      this.repo.findOneBy({ publicId }),
     );
 
     if (!existing) {
@@ -44,31 +45,46 @@ export class ClientRepository implements ClientRepositoryPort {
     existing.password = record.password;
     existing.status = record.status;
 
-    const saved = await withRetry(() => this.repository.save(existing));
+    const saved = await this.execute(() => this.repo.save(existing));
 
     return this.toSavedRecord(saved);
   }
 
   async findById(publicId: string): Promise<Client | null> {
-    const entity = await withRetry(() =>
-      this.repository.findOneBy({ publicId }),
+    const entity = await this.execute(() =>
+      this.repo.findOneBy({ publicId }),
     );
 
     return entity ? this.toDomain(entity) : null;
   }
 
   async findByDocument(document: string): Promise<Client | null> {
-    const entity = await withRetry(() =>
-      this.repository.findOneBy({ document }),
+    const entity = await this.execute(() =>
+      this.repo.findOneBy({ document }),
     );
 
     return entity ? this.toDomain(entity) : null;
   }
 
   async findByEmail(email: string): Promise<Client | null> {
-    const entity = await withRetry(() => this.repository.findOneBy({ email }));
+    const entity = await this.execute(() => this.repo.findOneBy({ email }));
 
     return entity ? this.toDomain(entity) : null;
+  }
+
+  private get repo(): Repository<ClientEntity> {
+    return (
+      transactionContext.getStore()?.getRepository(ClientEntity) ??
+      this.repository
+    );
+  }
+
+  private execute<T>(operation: () => Promise<T>): Promise<T> {
+    if (transactionContext.getStore()) {
+      return operation();
+    }
+
+    return withRetry(operation);
   }
 
   private toSavedRecord(saved: ClientEntity): SavedClientRecord {

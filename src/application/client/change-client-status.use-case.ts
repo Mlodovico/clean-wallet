@@ -14,6 +14,7 @@ import {
   findClientOrFail,
   toClientPersistenceRecord,
 } from "./client-use-case.helpers";
+import { UnitOfWorkPort } from "../port/unit-of-work.port";
 
 export type ClientStatusAction = "activate" | "suspend" | "deactivate";
 
@@ -33,6 +34,7 @@ export class ChangeClientStatusUseCase {
   constructor(
     private readonly clientRepository: ClientRepositoryPort,
     private readonly eventPublisher: EventPublisherPort,
+    private readonly unitOfWork: UnitOfWorkPort,
   ) {}
 
   async execute(input: ChangeClientStatusInput): Promise<Client> {
@@ -46,23 +48,24 @@ export class ChangeClientStatusUseCase {
     const updated = result.getValue();
 
     try {
-      await this.clientRepository.update(
-        updated.id.getValue(),
-        toClientPersistenceRecord(updated),
-      );
+      await this.unitOfWork.run(async () => {
+        await this.clientRepository.update(
+          updated.id.getValue(),
+          toClientPersistenceRecord(updated),
+        );
+        await this.eventPublisher.publish({
+          type: EVENT_BY_ACTION[input.action],
+          payload: {
+            clientId: updated.id.getValue(),
+            from: client.status.getValue(),
+            to: updated.status.getValue(),
+          },
+          occurredAt: new Date(),
+        });
+      });
     } catch {
       throw new InternalServerErrorException("Failed to change client status");
     }
-
-    await this.eventPublisher.publish({
-      type: EVENT_BY_ACTION[input.action],
-      payload: {
-        clientId: updated.id.getValue(),
-        from: client.status.getValue(),
-        to: updated.status.getValue(),
-      },
-      occurredAt: new Date(),
-    });
 
     return updated;
   }

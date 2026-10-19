@@ -14,6 +14,7 @@ import {
   mockClientRepository,
   mockEventPublisher,
   mockPasswordHasher,
+  mockUnitOfWork,
 } from "../../testing/mocks/client-ports.mock";
 import { CreateClientUseCase } from "./create-client.use-case";
 
@@ -22,13 +23,15 @@ describe("CreateClientUseCase", () => {
   let repository: ReturnType<typeof mockClientRepository>;
   let hasher: ReturnType<typeof mockPasswordHasher>;
   let events: ReturnType<typeof mockEventPublisher>;
+  let unitOfWork: ReturnType<typeof mockUnitOfWork>;
 
   beforeEach(() => {
     repository = mockClientRepository();
     hasher = mockPasswordHasher();
     events = mockEventPublisher();
+    unitOfWork = mockUnitOfWork();
 
-    useCase = new CreateClientUseCase(repository, hasher, events);
+    useCase = new CreateClientUseCase(repository, hasher, events, unitOfWork);
   });
 
   it("creates a pending client, stores the hashed password and publishes client.created", async () => {

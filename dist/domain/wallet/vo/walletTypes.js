@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WalletType = void 0;
-const Result_1 = require("../../../shared/utils/Result");
+const Result_1 = require("src/shared/utils/Result");
 const walletTypes_errors_1 = require("../errors/walletTypes.errors");
 class WalletType {
     value;

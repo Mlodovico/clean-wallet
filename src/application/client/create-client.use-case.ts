@@ -13,6 +13,7 @@ import { Password } from "../../domain/client/vo/Password";
 import { EventPublisherPort } from "../port/event-publisher.port";
 import { PasswordHasherPort } from "../port/password-hasher.port";
 import { toClientPersistenceRecord } from "./client-use-case.helpers";
+import { UnitOfWorkPort } from "../port/unit-of-work.port";
 
 export type CreateClientInput = {
   name: string;
@@ -29,6 +30,7 @@ export class CreateClientUseCase {
     private readonly clientRepository: ClientRepositoryPort,
     private readonly passwordHasher: PasswordHasherPort,
     private readonly eventPublisher: EventPublisherPort,
+    private readonly unitOfWork: UnitOfWorkPort,
   ) {}
 
   async execute(input: CreateClientInput): Promise<Client> {
@@ -72,19 +74,20 @@ export class CreateClientUseCase {
     }
 
     try {
-      await this.clientRepository.save(toClientPersistenceRecord(client));
+      await this.unitOfWork.run(async () => {
+        await this.clientRepository.save(toClientPersistenceRecord(client));
+        await this.eventPublisher.publish({
+          type: "client.created",
+          payload: {
+            clientId: client.id.getValue(),
+            status: client.status.getValue(),
+          },
+          occurredAt: new Date(),
+        });
+      });
     } catch {
       throw new InternalServerErrorException("Failed to create client");
     }
-
-    await this.eventPublisher.publish({
-      type: "client.created",
-      payload: {
-        clientId: client.id.getValue(),
-        status: client.status.getValue(),
-      },
-      occurredAt: new Date(),
-    });
 
     return client;
   }

@@ -1,4 +1,4 @@
-import { Result } from "../../shared/utils/Result";
+import { Result } from "src/shared/utils/Result";
 import { Birthdate } from "./vo/Birthdate";
 import { ClientId } from "./vo/ClientId";
 import { Email } from "./vo/Email";
